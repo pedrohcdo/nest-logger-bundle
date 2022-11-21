@@ -1,0 +1,17 @@
+{
+	"proseWrap": "preserve",
+	"quoteProps": "as-needed",
+	"arrowParens": "avoid",
+	"jsxSingleQuote": false,
+	"printWidth": 110,
+	"requirePragma": false,
+	"singleQuote": true,
+	"tabWidth": 2,
+	"trailingComma": "es5",
+	"useTabs": true,
+	"vueIndentScriptAndStyle": false,
+	"semi": true,
+	"jsxBracketSameLine": true,
+	"bracketSpacing": true,
+	"insertPragma": false
+}
