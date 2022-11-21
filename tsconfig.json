@@ -11,6 +11,10 @@
 		"allowSyntheticDefaultImports": true,
 		"incremental": true,
 		"baseUrl": "./",
-		"outDir": "./dist"
+		"outDir": "./dist",
+		"paths": {
+			"@pedrohcd/nest-logger": ["lib/src"],
+			"@pedrohcd/nest-logger/*": ["lib/src/*"]
+		}
 	}
 }

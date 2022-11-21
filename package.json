@@ -5,7 +5,10 @@
 
   "scripts": {
     "test": "jest",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "build": "nest build",
+    "publish-library": "npm run prebuild && nest build nest-logger && npm publish",
+    "start:test-project": "NODE_ENV=development nest start --debug --watch"
   },
 
   "peerDependencies": {
@@ -21,7 +24,11 @@
     "pino-datadog": "^2.0.2",
     "pino-http": "^8.2.0",
     "pino-multi-stream": "^6.0.0",
-    "pino-pretty": "^9.1.0"
+    "pino-pretty": "^9.1.0",
+    "quick-format-unescaped": "^4.0.4",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.5.5",
+    "swagger-ui-express": "^4.4.0"
   },
 
   "devDependencies": {

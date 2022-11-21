@@ -3,8 +3,27 @@
 	"collection": "@nestjs/schematics",
 	"monorepo": true,
 
-	"projects": {
+	"sourceRoot": "test/src",
 
+	"projects": {
+		"nest-logger": {
+			"type": "library",
+			"root": "lib",
+			"entryFile": "index",
+			"sourceRoot": "lib/src",
+			"compilerOptions": {
+			  "tsConfigPath": "lib/tsconfig.lib.json"
+			}
+		},
+		"test": {
+			"type": "application",
+			"root": "test",
+			"entryFile": "main",
+			"sourceRoot": "test/src",
+			"compilerOptions": {
+			  "tsConfigPath": "test/tsconfig.test.json"
+			}
+		}
 	},
 
 	"compilerOptions": {
