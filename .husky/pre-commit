@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npx prettier --write lib/src/**/*.ts test/src/**/*.ts
+npx prettier --write lib/src/**/*.ts test/src/**/*.ts test-utils/src/**/*.ts

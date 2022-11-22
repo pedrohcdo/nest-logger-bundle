@@ -15,6 +15,15 @@
 			  "tsConfigPath": "lib/tsconfig.lib.json"
 			}
 		},
+		"test-utils": {
+			"type": "library",
+			"root": "test-utils",
+			"entryFile": "index",
+			"sourceRoot": "test-utils/src",
+			"compilerOptions": {
+			  "tsConfigPath": "test-utils/tsconfig.test-utils.json"
+			}
+		},
 		"test": {
 			"type": "application",
 			"root": "test",

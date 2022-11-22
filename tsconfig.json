@@ -14,7 +14,9 @@
 		"outDir": "./dist",
 		"paths": {
 			"@pedrohcd/nest-logger": ["lib/src"],
-			"@pedrohcd/nest-logger/*": ["lib/src/*"]
+			"@pedrohcd/nest-logger/*": ["lib/src/*"],
+			"test-utils": ["test-utils/src"],
+			"test-utils/*": ["test-utils/src/*"],
 		}
 	}
 }
