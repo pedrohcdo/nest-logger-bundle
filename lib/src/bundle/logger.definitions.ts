@@ -1,6 +1,8 @@
 import pino from 'pino';
 
-export type PinoMethods = Pick<pino.Logger, 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal'>;
+export type PinoLevels = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
+
+export type PinoMethods = Pick<pino.Logger, PinoLevels>;
 
 export type LoggerFunction =
 	| ((msg: string, ...args: any[]) => void)

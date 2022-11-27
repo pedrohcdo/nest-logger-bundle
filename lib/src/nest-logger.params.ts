@@ -1,4 +1,5 @@
 import pino from 'pino'
+import { PinoLevels } from './bundle/logger.definitions'
 export const PINO_LOGGER_PROVIDER_TOKEN = 'PINO_LOGGER_PROVIDER_TOKEN'
 export const ROOT_LOGGER_PROVIDER_TOKEN = 'ROOT_LOGGER_PROVIDER_TOKEN'
 
@@ -31,7 +32,7 @@ export interface NestLoggerParams {
 	},
 
 	contextBundle: {
-		defaultLevel?: string
+		defaultLevel?: PinoLevels
 
 		strategy?: {
 			level?: NestLoggerLevelStrategy

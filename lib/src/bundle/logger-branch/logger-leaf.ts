@@ -1,7 +1,7 @@
 import { NestLoggerLevelStrategy } from "@pedrohcd/nest-logger/nest-logger.params";
 import pino from "pino";
 import { NestLoggerUtils } from "../context.utils";
-import { LoggerFunction } from "../logger.definitions";
+import { LoggerFunction, PinoLevels } from "../logger.definitions";
 import { LoggerBranch } from "./logger-branch";
 import { LoggerNode } from "./logger-node";
 
@@ -15,12 +15,12 @@ export class LoggerLeaf implements LoggerNode {
 		};
 	}
 
-	introspectLevel(_: NestLoggerLevelStrategy, defaultLevel: string = 'info') {
+	introspectLevel(_: NestLoggerLevelStrategy, defaultLevel: PinoLevels = 'info'): PinoLevels {
 		if (!this.level) return defaultLevel;
 		return this.level;
 	}
 
-	clone(parent: LoggerBranch): LoggerNode {
+	clone(): LoggerNode {
 		// Cloning, this is a simple object with {message, {...loggableData}}
 		const clonedLoggedObject = JSON.parse(JSON.stringify(this.log));
 		return new LoggerLeaf(this.level, clonedLoggedObject);

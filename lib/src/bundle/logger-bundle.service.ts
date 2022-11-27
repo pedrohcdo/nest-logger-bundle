@@ -4,7 +4,27 @@ import pino from 'pino';
 import { MODULE_OPTIONS_TOKEN } from '../nest-logger.module-definition';
 import { LoggerFunction } from './logger.definitions';
 import { LoggerBranch } from './logger-branch/logger-branch';
-import { LoggerBindings, LoggerBindingsContext } from './logger-branch/logger-bindings';
+
+
+export interface LoggerBindingsContext {
+	method?: string;
+	path?: string;
+	duration?: number;
+	ip?: string;
+	response?: {
+		statusCode: number;
+		headers: any;
+		data?: any;
+	};
+}
+
+export interface LoggerBindings {
+	tgContext: LoggerBindingsContext;
+
+	tgTags: {
+		[key: string]: string;
+	};
+}
 
 export class LoggableBundleObject {
 	object: any;

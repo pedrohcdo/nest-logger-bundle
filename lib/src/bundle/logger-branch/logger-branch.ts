@@ -1,12 +1,12 @@
-import { NestLoggerLevelStrategy } from "@pedrohcd/nest-logger/nest-logger.params";
 import pino from "pino";
-import { LoggerFunction } from "../logger.definitions";
+import { LoggerFunction, PinoLevels } from "../logger.definitions";
 import { LoggerLeaf } from "./logger-leaf";
 import { LoggerNode } from "./logger-node";
+import { NestLoggerLevelStrategy } from '../../nest-logger.params';
 
 export class LoggerBranch implements LoggerNode {
 	createdAt: number = Date.now();
-	exitedAt: number;
+	exitedAt?: number = null;
 
 	branchs: LoggerNode[] = [];
 
@@ -37,8 +37,8 @@ export class LoggerBranch implements LoggerNode {
 		return this.exitedAt - this.createdAt;
 	}
 
-	introspectLevel(strategy: NestLoggerLevelStrategy, defaultLevel = 'info'): string {
-		let currentLevel: string = null;
+	introspectLevel(strategy: NestLoggerLevelStrategy, defaultLevel: PinoLevels = 'info'): PinoLevels {
+		let currentLevel: PinoLevels = null;
 		for (const branch of this.branchs) {
 			const cLevel = branch.introspectLevel(strategy, defaultLevel);
 			if (currentLevel === null) {
@@ -52,11 +52,11 @@ export class LoggerBranch implements LoggerNode {
 						currentLevel = cLevel;
 						break;
 					case NestLoggerLevelStrategy.MINOR_LEVEL: {
-						currentLevel = pino.levels.labels[Math.min(lv1, lv2)];
+						currentLevel = pino.levels.labels[Math.min(lv1, lv2)] as PinoLevels;
 						break;
 					}
-					case NestLoggerLevelStrategy.LAST_LEVEL:
-						currentLevel = pino.levels.labels[Math.max(lv1, lv2)];
+					case NestLoggerLevelStrategy.MAJOR_LEVEL:
+						currentLevel = pino.levels.labels[Math.max(lv1, lv2)] as PinoLevels;
 						break;
 				}
 			}
@@ -78,7 +78,7 @@ export class LoggerBranch implements LoggerNode {
 		return object;
 	}
 
-	clone(parent: LoggerBranch = null): LoggerNode {
+	clone(parent: LoggerBranch = null): LoggerBranch {
 		const cloned = new LoggerBranch(parent, this.branchName);
 		cloned.createdAt = this.createdAt;
 		cloned.exitedAt = this.exitedAt;
