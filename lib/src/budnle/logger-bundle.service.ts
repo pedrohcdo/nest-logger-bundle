@@ -1,121 +1,118 @@
-import { Inject, Injectable, Scope } from "@nestjs/common";
-import { NestLoggerParams } from "../nest-logger.params";
+import { Inject, Injectable, Scope } from '@nestjs/common';
+import { NestLoggerParams } from '../nest-logger.params';
 import pino from 'pino';
-import { LoggerBindings, LoggerBindingsContext, LoggerBranch, LoggerLeaf } from "./logger-branch";
-import { MODULE_OPTIONS_TOKEN } from "../nest-logger.module-definition";
-import { LoggerFunction } from "./logger.definitions";
+import { LoggerBindings, LoggerBindingsContext, LoggerBranch, LoggerLeaf } from './logger-branch';
+import { MODULE_OPTIONS_TOKEN } from '../nest-logger.module-definition';
+import { LoggerFunction } from './logger.definitions';
 
 export class LoggableBundleObject {
-    
-    object: any;
-    level: string;
+	object: any;
+	level: string;
 }
 
 @Injectable({
-    scope: Scope.REQUEST
+	scope: Scope.REQUEST,
 })
 export class LoggerBundle {
+	private expired: boolean = false;
+	private currentBranch: LoggerBranch;
+	private bindings: LoggerBindings;
 
-    private expired: boolean = false;
-    private currentBranch: LoggerBranch;
-    private bindings: LoggerBindings;
+	constructor(@Inject(MODULE_OPTIONS_TOKEN) private params: NestLoggerParams) {
+		this.currentBranch = new LoggerBranch(null, 'root');
+		this.bindings = {
+			tgContext: {},
+			tgTags: {},
+		};
+	}
 
-    constructor(@Inject(MODULE_OPTIONS_TOKEN) private params: NestLoggerParams) {
-        this.currentBranch = new LoggerBranch(null, 'root');
-        this.bindings = {
-            tgContext: {
+	setContext(context: LoggerBindingsContext) {
+		Object.assign(this.bindings.tgContext, context);
+	}
 
-            },
-            tgTags: {
+	putTag(tag: string, value: string) {
+		this.bindings.tgTags[tag] = value;
+	}
 
-            }
-        }
-    }
+	copyFrom(otherBundle: LoggerBundle) {
+		this.currentBranch = otherBundle.getRootBranch().clone() as LoggerBranch;
+		this.bindings = {
+			tgContext: Object.assign({}, otherBundle.bindings.tgContext),
+			tgTags: Object.assign({}, otherBundle.bindings.tgTags),
+		};
+	}
 
-    setContext(context: LoggerBindingsContext) {
-       Object.assign(this.bindings.tgContext, context);
-    }
+	enter(branchName: string) {
+		this.currentBranch = this.currentBranch.enter(branchName);
+	}
 
-    putTag(tag: string, value: string) {
-        this.bindings.tgTags[tag] = value;
-    }
+	log(level: pino.Level, msg: string, ...args: any[]): void;
+	log(level: pino.Level, obj: unknown, msg?: string, ...args: any[]): void;
+	log(level: pino.Level, ...params: Parameters<LoggerFunction>) {
+		this.currentBranch.log(level, ...params);
+	}
 
-    copyFrom(otherBundle: LoggerBundle) {
-        this.currentBranch = otherBundle.getRootBranch().clone() as LoggerBranch;
-        this.bindings = {
-            tgContext: Object.assign({}, otherBundle.bindings.tgContext),
-            tgTags: Object.assign({}, otherBundle.bindings.tgTags)
-        }
-    }
+	exit() {
+		if (!this.currentBranch.parent) throw Error('Could not close current branch.');
+		this.currentBranch = this.currentBranch.exit();
+	}
 
-    enter(branchName: string) {
-        this.currentBranch = this.currentBranch.enter(branchName);
-    }
+	private getRootBranch() {
+		let current = this.currentBranch;
+		while (current.parent) {
+			current = current.parent;
+		}
+		return current;
+	}
 
-    log(level: pino.Level, msg: string, ...args: any[]): void;
-    log(level: pino.Level, obj: unknown, msg?: string, ...args: any[]): void;
-    log(level: pino.Level, ...params: Parameters<LoggerFunction>) {
-        this.currentBranch.log(level, ...params);
-    }
+	build(): LoggableBundleObject {
+		// Exit root branch
+		while (this.currentBranch.parent) {
+			this.currentBranch = this.currentBranch.exit();
+		}
+		this.currentBranch.exit();
 
-    exit() {
-        if(!this.currentBranch.parent)
-            throw Error("Could not close current branch.")
-        this.currentBranch = this.currentBranch.exit();
-    }
+		///
+		const bindings = {
+			tgContext: Object.assign(
+				{
+					requestDuration: this.currentBranch.profiling(),
+				},
+				this.bindings.tgContext
+			),
 
-    private getRootBranch() {
-        let current = this.currentBranch;
-        while(current.parent) {
-            current = current.parent;
-        }
-        return current;
-    }
+			tgTags: Object.assign({}, this.bindings.tgTags),
+		};
+		delete bindings.tgContext.response;
 
-    build(): LoggableBundleObject {
+		if (this.bindings.tgContext.response) {
+			Object.assign(bindings, {
+				res: this.bindings.tgContext.response,
+			});
+		}
 
-        // Exit root branch
-        while(this.currentBranch.parent) {
-            this.currentBranch = this.currentBranch.exit();
-        }
-        this.currentBranch.exit();
+		//
+		const object = {
+			logs: this.currentBranch.toObject(),
+			...bindings,
+		};
+		const level = this.currentBranch.introspectLevel(
+			this.params.contextBundle.strategy.level,
+			this.params.contextBundle.defaultLevel
+		);
 
-        ///
-        const bindings = {
-            tgContext: Object.assign({
-                requestDuration: this.currentBranch.profiling(),
-            }, this.bindings.tgContext),
+		//
+		return {
+			object,
+			level,
+		};
+	}
 
-            tgTags: Object.assign({}, this.bindings.tgTags)
-        }
-        delete bindings.tgContext.response;
+	expireNow() {
+		this.expired = true;
+	}
 
-        if(this.bindings.tgContext.response) {
-            Object.assign(bindings, {
-                res: this.bindings.tgContext.response
-            })
-        }
-
-        //
-        const object = {
-            logs: this.currentBranch.toObject(),
-            ...bindings,
-        };
-        const level = this.currentBranch.introspectLevel(this.params.contextBundle.strategy.level, this.params.contextBundle.defaultLevel);
-  
-        //
-        return {
-            object,
-            level
-        }
-    }
-
-    expireNow() {
-        this.expired = true;
-    }
-
-    isExpired() {
-        return this.expired;
-    }
-   
+	isExpired() {
+		return this.expired;
+	}
 }
