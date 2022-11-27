@@ -1,55 +1,8 @@
-import pino from 'pino';
-import { NestLoggerLevelStrategy } from '../nest-logger.params';
-import { NestLoggerUtils } from './context.utils';
-import { LoggerFunction } from './logger.definitions';
-
-export interface LoggerBindingsContext {
-	method?: string;
-	path?: string;
-	duration?: number;
-	ip?: string;
-	response?: {
-		statusCode: number;
-		headers: any;
-		data?: any;
-	};
-}
-
-export interface LoggerBindings {
-	tgContext: LoggerBindingsContext;
-
-	tgTags: {
-		[key: string]: string;
-	};
-}
-
-export interface LoggerNode {
-	toObject(): any;
-	introspectLevel(_: NestLoggerLevelStrategy, defaultLevel: string): string;
-	clone(parent?: LoggerBranch): LoggerNode;
-}
-
-export class LoggerLeaf implements LoggerNode {
-	constructor(public level: pino.Level, public log: Parameters<LoggerFunction>) {}
-
-	toObject() {
-		return {
-			level: this.level,
-			...NestLoggerUtils.parseLoggedParamsToObject(this.log),
-		};
-	}
-
-	introspectLevel(_: NestLoggerLevelStrategy, defaultLevel: string = 'info') {
-		if (!this.level) return defaultLevel;
-		return this.level;
-	}
-
-	clone(parent: LoggerBranch): LoggerNode {
-		// Cloning, this is a simple object with {message, {...loggableData}}
-		const clonedLoggedObject = JSON.parse(JSON.stringify(this.log));
-		return new LoggerLeaf(this.level, clonedLoggedObject);
-	}
-}
+import { NestLoggerLevelStrategy } from "@pedrohcd/nest-logger/nest-logger.params";
+import pino from "pino";
+import { LoggerFunction } from "../logger.definitions";
+import { LoggerLeaf } from "./logger-leaf";
+import { LoggerNode } from "./logger-node";
 
 export class LoggerBranch implements LoggerNode {
 	createdAt: number = Date.now();

@@ -1,9 +1,10 @@
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { NestLoggerParams } from '../nest-logger.params';
 import pino from 'pino';
-import { LoggerBindings, LoggerBindingsContext, LoggerBranch, LoggerLeaf } from './logger-branch';
 import { MODULE_OPTIONS_TOKEN } from '../nest-logger.module-definition';
 import { LoggerFunction } from './logger.definitions';
+import { LoggerBranch } from './logger-branch/logger-branch';
+import { LoggerBindings, LoggerBindingsContext } from './logger-branch/logger-bindings';
 
 export class LoggableBundleObject {
 	object: any;
