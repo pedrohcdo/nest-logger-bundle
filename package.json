@@ -2,7 +2,6 @@
   "name": "@pedrohcdo/nest-logger",
   "version": "0.1.00",
   "author": "Pedro Henrique C. (pedrohcdo)",
-
   "scripts": {
     "test": "jest",
     "prepare": "husky install",
@@ -10,16 +9,15 @@
     "publish-library": "npm run prebuild && nest build nest-logger && npm publish",
     "start:test-project": "NODE_ENV=development nest start --debug --watch"
   },
-
   "peerDependencies": {
-    "@nestjs/core": "^9.0.10",
     "@nestjs/common": "^9.0.9",
     "@nestjs/config": "^2.2.0",
+    "@nestjs/core": "^9.0.10",
     "@nestjs/swagger": "^6.1.1"
   },
-
   "dependencies": {
     "joi": "^17.6.0",
+    "moment": "^2.29.4",
     "pino": "^8.4.0",
     "pino-datadog": "^2.0.2",
     "pino-http": "^8.2.0",
@@ -30,7 +28,6 @@
     "rxjs": "^7.5.5",
     "swagger-ui-express": "^4.4.0"
   },
-
   "devDependencies": {
     "@commitlint/cli": "^17.1.0",
     "@commitlint/config-conventional": "^17.2.0",
@@ -39,6 +36,7 @@
     "@nestjs/testing": "^9.0.11",
     "@types/express": "^4.17.13",
     "@types/jest": "^28.1.8",
+    "@types/lodash": "^4.14.189",
     "@types/node": "^18.7.4",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.30.0",
@@ -47,21 +45,27 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.1.0",
     "husky": "^8.0.2",
+    "jest": "^29.0.3",
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
     "source-map-support": "^0.5.21",
     "supertest": "^6.3.1",
-    "jest": "^29.0.3",
     "ts-jest": "^29.0.3",
     "ts-loader": "^9.4.1",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.0",
     "typescript": "^4.9.3"
   },
-
   "jest": {
-    "moduleFileExtensions": [ "ts", "js", "json" ],
-    "roots": ["lib/src", "test/src"],
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ],
+    "roots": [
+      "lib/src",
+      "test/src"
+    ],
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
@@ -72,10 +76,18 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {
-      "@pedrohcd/nest-logger": ["<rootDir>/lib/src"],
-			"@pedrohcd/nest-logger/*": ["<rootDir>/lib/src/*"],
-			"test-utils": ["<rootDir>/test-utils/src"],
-			"test-utils/*": ["<rootDir>/test-utils/src/*"]
-		}
+      "@pedrohcd/nest-logger": [
+        "<rootDir>/lib/src"
+      ],
+      "@pedrohcd/nest-logger/*": [
+        "<rootDir>/lib/src/*"
+      ],
+      "test-utils": [
+        "<rootDir>/test-utils/src"
+      ],
+      "test-utils/*": [
+        "<rootDir>/test-utils/src/*"
+      ]
+    }
   }
 }

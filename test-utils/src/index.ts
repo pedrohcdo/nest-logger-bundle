@@ -1,13 +1,10 @@
-import { DynamicModule, ForwardReference, Type } from '@nestjs/common'
-import { ConfigModule, ConfigService } from '@nestjs/config'
-import { Test, TestingModuleBuilder } from '@nestjs/testing'
+import { DynamicModule, ForwardReference, Type } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { Test, TestingModuleBuilder } from '@nestjs/testing';
 
-import pino from 'pino'
-
-type ModuleType = Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference
+type ModuleType = Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference;
 
 export class TestUtils {
-
 	/**
 	 * Create a configured test module
 	 */
@@ -18,14 +15,14 @@ export class TestUtils {
 				ConfigModule.forRoot({
 					isGlobal: true,
 				}),
-                ...importModules
+				...importModules,
 			],
-		})
+		});
 
 		for (const overrideProvider of overrideProviders) {
-			builder.overrideProvider(overrideProvider[0]).useClass(overrideProvider[1])
+			builder.overrideProvider(overrideProvider[0]).useClass(overrideProvider[1]);
 		}
-        
-		return await builder.compile()
+
+		return await builder.compile();
 	}
 }
