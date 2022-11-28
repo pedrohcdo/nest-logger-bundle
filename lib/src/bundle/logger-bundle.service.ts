@@ -89,7 +89,7 @@ export class NestLoggerBundle {
 	}
 
 	build(): LoggableBundleObject {
-		// 
+		//
 		while (this.currentBranch.parent) {
 			this.currentBranch = this.currentBranch.exit();
 		}

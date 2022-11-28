@@ -8,7 +8,11 @@ export class TestUtils {
 	/**
 	 * Create a configured test module
 	 */
-	static async createTestingModule(importModules: ModuleType[], overrideProviders: [any, any][] = [], mockers: [string | symbol, any][] = []) {
+	static async createTestingModule(
+		importModules: ModuleType[],
+		overrideProviders: [any, any][] = [],
+		mockers: [string | symbol, any][] = []
+	) {
 		const builder: TestingModuleBuilder = Test.createTestingModule({
 			providers: [],
 			imports: [
@@ -16,7 +20,7 @@ export class TestUtils {
 					isGlobal: true,
 				}),
 				...importModules,
-			]
+			],
 		});
 
 		for (const overrideProvider of overrideProviders) {
@@ -24,12 +28,12 @@ export class TestUtils {
 		}
 
 		builder.useMocker(token => {
-			for(let mocker of mockers) {
+			for (let mocker of mockers) {
 				if (token === mocker[0]) {
-					return mocker[1]
+					return mocker[1];
 				}
 			}
-		})
+		});
 
 		return await builder.compile();
 	}
