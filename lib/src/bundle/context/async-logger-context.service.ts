@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import pino from 'pino';
-import { NestLoggerStorage } from '../../middleware/async-logger.hook';
 import { MODULE_OPTIONS_TOKEN } from '../../nest-logger.module-definition';
 import {
 	NestLoggerDispatchStrategy,
@@ -9,6 +8,7 @@ import {
 	PINO_LOGGER_PROVIDER_TOKEN,
 } from '../../nest-logger.params';
 import { NestLoggerBundle } from '../logger-bundle.service';
+import { NestLoggerStorage } from './async-logger.hook';
 
 /**
  *  This asynchronous context handles bundles using 'NestLoggerStorage' which in turn uses 'AsyncLocalStorage'.

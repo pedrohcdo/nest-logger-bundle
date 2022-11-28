@@ -1,7 +1,7 @@
 import { Provider, Scope } from '@nestjs/common';
-import { NestLoggerParams, ROOT_LOGGER_PROVIDER_TOKEN } from '../nest-logger.params';
+import { NestLoggerParams, ROOT_LOGGER_PROVIDER_TOKEN } from '../../nest-logger.params';
 import pino from 'pino';
-import { MODULE_OPTIONS_TOKEN } from '../nest-logger.module-definition';
+import { MODULE_OPTIONS_TOKEN } from '../../nest-logger.module-definition';
 
 export const RootLoggerProvider: Provider = {
 	provide: ROOT_LOGGER_PROVIDER_TOKEN,

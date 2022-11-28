@@ -1,4 +1,4 @@
-import { NestLoggerLevelStrategy } from "@pedrohcd/nest-logger/nest-logger.params";
+import { NestLoggerLevelStrategy } from "../../nest-logger.params";
 import { PinoLevels } from "../context/logger.definitions";
 
 export interface LoggerNode {
