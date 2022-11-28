@@ -1,5 +1,5 @@
 import pino from "pino";
-import { LoggerFunction, PinoLevels } from "../logger.definitions";
+import { LoggerFunction, PinoLevels } from "../context/logger.definitions";
 import { LoggerLeaf } from "./logger-leaf";
 import { LoggerNode } from "./logger-node";
 import { NestLoggerLevelStrategy } from '../../nest-logger.params';

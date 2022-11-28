@@ -1,5 +1,5 @@
 import pino from 'pino'
-import { PinoLevels } from './bundle/logger.definitions'
+import { PinoLevels } from './bundle/context/logger.definitions'
 export const PINO_LOGGER_PROVIDER_TOKEN = 'PINO_LOGGER_PROVIDER_TOKEN'
 export const ROOT_LOGGER_PROVIDER_TOKEN = 'ROOT_LOGGER_PROVIDER_TOKEN'
 

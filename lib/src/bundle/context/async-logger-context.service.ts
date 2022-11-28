@@ -1,21 +1,25 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import pino from 'pino';
-import { NestLoggerStorage } from '../middleware/async-logger.hook';
-import { MODULE_OPTIONS_TOKEN } from '../nest-logger.module-definition';
+import { NestLoggerStorage } from '../../middleware/async-logger.hook';
+import { MODULE_OPTIONS_TOKEN } from '../../nest-logger.module-definition';
 import {
 	NestLoggerDispatchStrategy,
 	NestLoggerParams,
 	PINO_LOGGER_PROVIDER_TOKEN,
-} from '../nest-logger.params';
-import { LoggerBundle } from './logger-bundle.service';
+} from '../../nest-logger.params';
+import { NestLoggerBundle } from '../logger-bundle.service';
 
-@Injectable()
-export class LoggerContext {
+/**
+ *  This asynchronous context handles bundles using 'NestLoggerStorage' which in turn uses 'AsyncLocalStorage'.
+ */
+@Injectable({})
+export class NestAsyncLoggerContext {
+
 	private detachedContext: {
 		logger: pino.Logger;
 		reqId: string;
-		loggerBundle: LoggerBundle;
+		loggerBundle: NestLoggerBundle;
 	};
 
 	constructor(
@@ -40,7 +44,7 @@ export class LoggerContext {
 		};
 	}
 
-	// innerObject can be string, exception or object with extra fields to will be binding with log
+	// 
 	dispatchCurrentLoggerBundle(message: string): void;
 	dispatchCurrentLoggerBundle(innerObject: unknown, message?: string): void;
 	dispatchCurrentLoggerBundle(innerObject: unknown, message?: string) {
@@ -69,17 +73,17 @@ export class LoggerContext {
 	}
 
 	/**
-	 * Creates a new instance of LoggerContext from the current one,
-	 * also cloning the current state
+	 * Creates a new detached context which in turn no longer uses 'NestLoggerStorage', 
+	 * this detached context is created with a fixed bundle because it loses the ability to work asynchronously.
 	 */
-	async createDetachedContext(): Promise<LoggerContext> {
-		const context = await this.moduleRef.create(LoggerContext);
-		const detachedLoggerBundle = await this.moduleRef.create(LoggerBundle);
+	async createDetachedContext(): Promise<NestAsyncLoggerContext> {
+		const context = await this.moduleRef.create(NestAsyncLoggerContext);
+		const detachedLoggerBundle = await this.moduleRef.create(NestLoggerBundle);
 
 		let getFrom: {
 			logger: pino.Logger;
 			reqId: string;
-			loggerBundle: LoggerBundle;
+			loggerBundle: NestLoggerBundle;
 		};
 
 		if (this.detachedContext) {

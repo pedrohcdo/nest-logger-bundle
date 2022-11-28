@@ -1,7 +1,7 @@
 import format from 'quick-format-unescaped';
-import { LoggerFunction } from './logger.definitions';
+import { LoggerFunction } from '../context/logger.definitions';
 
-export class NestLoggerUtils {
+export class LoggerBranchUtils {
 	private constructor() {}
 
 	static parseLoggedParamsToObject(log: Parameters<LoggerFunction>) {

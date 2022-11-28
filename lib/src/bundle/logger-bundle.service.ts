@@ -2,9 +2,8 @@ import { Inject, Injectable, Scope } from '@nestjs/common';
 import { NestLoggerParams } from '../nest-logger.params';
 import pino from 'pino';
 import { MODULE_OPTIONS_TOKEN } from '../nest-logger.module-definition';
-import { LoggerFunction } from './logger.definitions';
+import { LoggerFunction } from './context/logger.definitions';
 import { LoggerBranch } from './logger-branch/logger-branch';
-
 
 export interface LoggerBindingsContext {
 	method?: string;
@@ -31,10 +30,13 @@ export class LoggableBundleObject {
 	level: string;
 }
 
+/**
+ * A bundle will be created for each request received
+ */
 @Injectable({
 	scope: Scope.REQUEST,
 })
-export class LoggerBundle {
+export class NestLoggerBundle {
 	private expired: boolean = false;
 	private currentBranch: LoggerBranch;
 	private bindings: LoggerBindings;
@@ -55,7 +57,7 @@ export class LoggerBundle {
 		this.bindings.tgTags[tag] = value;
 	}
 
-	copyFrom(otherBundle: LoggerBundle) {
+	copyFrom(otherBundle: NestLoggerBundle) {
 		this.currentBranch = otherBundle.getRootBranch().clone() as LoggerBranch;
 		this.bindings = {
 			tgContext: Object.assign({}, otherBundle.bindings.tgContext),
@@ -87,7 +89,7 @@ export class LoggerBundle {
 	}
 
 	build(): LoggableBundleObject {
-		// Exit root branch
+		// 
 		while (this.currentBranch.parent) {
 			this.currentBranch = this.currentBranch.exit();
 		}

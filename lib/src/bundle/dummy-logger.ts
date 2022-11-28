@@ -1,4 +1,4 @@
-import { LoggerFunction, PinoMethods } from './logger.definitions';
+import { LoggerFunction, PinoMethods } from './context/logger.definitions';
 
 export class DummyLogger implements PinoMethods {
 	setContextToken(_: string) {}

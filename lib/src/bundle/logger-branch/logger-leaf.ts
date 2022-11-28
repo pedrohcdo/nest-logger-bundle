@@ -1,7 +1,7 @@
 import { NestLoggerLevelStrategy } from "@pedrohcd/nest-logger/nest-logger.params";
 import pino from "pino";
-import { NestLoggerUtils } from "../context.utils";
-import { LoggerFunction, PinoLevels } from "../logger.definitions";
+import { LoggerFunction, PinoLevels } from "../context/logger.definitions";
+import { LoggerBranchUtils } from "./branch.utils";
 import { LoggerBranch } from "./logger-branch";
 import { LoggerNode } from "./logger-node";
 
@@ -11,7 +11,7 @@ export class LoggerLeaf implements LoggerNode {
 	toObject() {
 		return {
 			level: this.level,
-			...NestLoggerUtils.parseLoggedParamsToObject(this.log),
+			...LoggerBranchUtils.parseLoggedParamsToObject(this.log),
 		};
 	}
 
