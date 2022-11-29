@@ -4,6 +4,7 @@
 	"monorepo": true,
 
 	"sourceRoot": "test/src",
+	"entryFile": "main",
 
 	"projects": {
 		"nest-logger": {

@@ -18,5 +18,5 @@
 			"test-utils": ["test-utils/src"],
 			"test-utils/*": ["test-utils/src/*"],
 		}
-	}
+	},
 }

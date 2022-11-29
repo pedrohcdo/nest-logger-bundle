@@ -7,16 +7,28 @@ import {
 } from '@nestjs/common'
 import pino from 'pino'
 import pinoHttp from 'pino-http'
+import { NestAsyncLoggerContext, NestLoggerBundle } from './bundle'
+import { NestLoggerHookMiddleware, PinoLoggerProvider, RootLoggerProvider } from './core'
+import { InternalLoggerService, NestLoggerService } from './logger'
 import { ConfigurableModuleClass, MODULE_OPTIONS_TOKEN } from './nest-logger.module-definition'
-import { BindLoggerMiddleware } from './middleware/bind-logger.middleware'
 import { NestLoggerParams, PINO_LOGGER_PROVIDER_TOKEN } from './nest-logger.params'
 
 @Module({
 	providers: [
-
+		NestLoggerBundle,
+		NestLoggerService,
+		NestAsyncLoggerContext,
+		InternalLoggerService,
+		RootLoggerProvider,
+		PinoLoggerProvider
 	],
 	exports: [
-
+		NestLoggerBundle,
+		NestLoggerService,
+		NestAsyncLoggerContext,
+		InternalLoggerService,
+		RootLoggerProvider,
+		PinoLoggerProvider
 	],
 })
 export class NestLoggerModule extends ConfigurableModuleClass implements NestModule {
@@ -37,6 +49,6 @@ export class NestLoggerModule extends ConfigurableModuleClass implements NestMod
 			logger: this.pinoLogger,
 		})
 
-		consumer.apply(middleware, BindLoggerMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL })
+		consumer.apply(middleware, NestLoggerHookMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL })
 	}
 }

@@ -132,6 +132,7 @@ export class NestLoggerService implements PinoMethods, LoggerService {
 	scope: Scope.TRANSIENT,
 })
 export class AsyncLoggerService extends NestLoggerService {
+    
 	dispatch(message: string) {
 		this.loggerContext.dispatchCurrentLoggerBundle(message);
 	}

@@ -7,6 +7,7 @@ export const RootLoggerProvider: Provider = {
 	provide: ROOT_LOGGER_PROVIDER_TOKEN,
 
 	useFactory: (params: NestLoggerParams) => {
+		return pino({ enabled: false })
 		if (params.pinoHttp.logger) return params.pinoHttp.logger;
 		//
 		return pino({
@@ -16,9 +17,13 @@ export const RootLoggerProvider: Provider = {
 				options: {
 					colorize: true,
 				},
+				
 			},
 		});
+
+		
 	},
 
 	inject: [MODULE_OPTIONS_TOKEN],
 };
+

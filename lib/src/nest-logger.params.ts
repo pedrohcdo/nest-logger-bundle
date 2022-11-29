@@ -41,7 +41,8 @@ export interface NestLoggerParams {
 		}
 
 		stream?: {
-			
+			datadogApiKey: string,
+			datadogServiceName: string
 		}
 	}
 }
