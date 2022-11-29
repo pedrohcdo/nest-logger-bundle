@@ -1,16 +1,22 @@
-import { Global, Module } from '@nestjs/common'
-import { ConfigModule, ConfigService } from '@nestjs/config'
-import environment from '../config/environment.config'
-import { GlobalInterceptor } from './global-http-interceptor'
-import { GlobalExceptionFilter } from './global-exception.filter'
+import { Global, Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import environment from '../config/environment.config';
+import { GlobalInterceptor } from './global-http-interceptor';
+import { GlobalExceptionFilter } from './global-exception.filter';
 
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core'
-import { environmentSchema } from '../config/environment.schema'
-import { NestLoggerDispatchStrategy, NestLoggerLevelStrategy, NestLoggerModule, NestLoggerOnErrorStrategy, NestLoggerParams } from '@pedrohcd/nest-logger'
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { environmentSchema } from '../config/environment.schema';
+import {
+	NestLoggerDispatchStrategy,
+	NestLoggerLevelStrategy,
+	NestLoggerModule,
+	NestLoggerOnErrorStrategy,
+	NestLoggerParams,
+} from '@pedrohcd/nest-logger';
 
 //
-const { NODE_ENV } = process.env
-const prod = !NODE_ENV || NODE_ENV === 'production'
+const { NODE_ENV } = process.env;
+const prod = !NODE_ENV || NODE_ENV === 'production';
 
 @Global()
 @Module({
@@ -45,7 +51,7 @@ const prod = !NODE_ENV || NODE_ENV === 'production'
 							datadogServiceName: config.get('datadog.serviceName'),
 						},
 					},
-				}
+				};
 			},
 			inject: [ConfigService],
 		}),
