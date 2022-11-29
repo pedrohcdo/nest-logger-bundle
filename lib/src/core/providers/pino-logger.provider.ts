@@ -10,7 +10,6 @@ export const PinoLoggerProvider: Provider = {
 
 	useFactory: async (params: NestLoggerParams) => {
 		if (!params.contextBundle.stream) return pino({ enabled: false });
-		return pino({ enabled: false });
         const writeStream = await datadog.createWriteStream({
             apiKey: params.contextBundle.stream.datadogApiKey,
             service: params.contextBundle.stream.datadogServiceName
