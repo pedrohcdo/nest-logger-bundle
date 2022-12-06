@@ -7,7 +7,7 @@
 	"entryFile": "main",
 
 	"projects": {
-		"nest-logger": {
+		"nest-logger-bundle": {
 			"type": "library",
 			"root": "lib",
 			"entryFile": "index",

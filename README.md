@@ -43,15 +43,23 @@ ________________
 $ npm i --save @pedrohcd/nest-logger-bundle
 ```
 
+## Samples
+
 ________________
 
-## Example
+If you want to see some usage examples use this repo <a href="https://github.com/pedrohcdo/nest-logger-bundle-samples" target="blank">NestLoggerBundleSamples</a>, In it you will find some projects with some use cases, the codes are commented for a better understanding.
 
-`If you want to skip this step and see an example of how to configure it, see the project `[Example](test).
+> If you want to see an simple example of how to configure it, see the test project [Example](test).
+
+________________
+
+## How to use
+
+
 
 First we need to import the NestLoggerModule module in the module we want to use.
 
-`In my projects I usually import the 'NestLoggerModule' module in a global module that puts all the main dependencies of the project and also export the 'NestLoggerModule' to be visible to any other module as shown in the example project.`
+> In my projects I usually import the 'NestLoggerModule' module in a global module that puts all the main dependencies of the project and also export the 'NestLoggerModule' to be visible to any other module as shown in the example project.
 
 
 Follow the minimum configuration:
@@ -214,7 +222,7 @@ export class GlobalModule {}
 
 ## Stay in touch
 
-- Author - [Pedro Henrique C.](https://twitter.com/kammysliwiec)
+- Author - [Pedro Henrique C.](https://github.com/pedrohcdo)
 
 ## License
 
