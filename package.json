@@ -1,6 +1,6 @@
 {
   "name": "@pedrohcdo/nest-logger",
-  "version": "0.1.00",
+  "version": "0.1.0",
   "author": "Pedro Henrique C. (pedrohcdo)",
   "scripts": {
     "test": "jest",
