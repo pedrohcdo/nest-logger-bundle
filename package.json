@@ -1,12 +1,13 @@
 {
-  "name": "@pedrohcdo/nest-logger",
+  "name": "@pedrohcdo/nest-logger-bundle",
   "version": "0.1.1",
   "author": "Pedro Henrique C. (pedrohcdo)",
   "scripts": {
     "test": "jest",
     "prepare": "husky install",
+    "prebuild": "rimraf dist",
     "build": "nest build",
-    "publish-library": "npm run prebuild && nest build nest-logger && npm publish",
+    "publish-library": "npm run prebuild && nest build nest-logger && npm publish --access public",
     "start:test-project": "NODE_ENV=development nest start test --debug --watch"
   },
   "peerDependencies": {
