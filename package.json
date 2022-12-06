@@ -2,8 +2,8 @@
   "name": "@pedrohcdo/nest-logger-bundle",
   "version": "0.1.4",
   "author": "Pedro Henrique C. (pedrohcdo)",
-  "main": "dist/libs/index.js",
-  "types": "dist/libs/index.d.ts",
+  "main": "dist/lib/index.js",
+  "types": "dist/lib/index.d.ts",
   "files": [
     "dist"
   ],
