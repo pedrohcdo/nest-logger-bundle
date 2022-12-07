@@ -29,32 +29,7 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 		}),
 
 		//
-		NestLoggerModule.forRootAsync({
-			isGlobal: false,
-			useFactory: (config: ConfigService): NestLoggerParams => {
-				return {
-					/** don't change this */
-					pinoHttp: {
-						level: !prod ? 'trace' : 'info',
-					},
-
-					// You can change this
-					contextBundle: {
-						strategy: {
-							onDispatch: NestLoggerDispatchStrategy.DISPATCH,
-							level: NestLoggerLevelStrategy.MAJOR_LEVEL,
-							onError: NestLoggerOnErrorStrategy.DISPATCH,
-						},
-
-						stream: {
-							datadogApiKey: config.get('datadog.apiKey'),
-							datadogServiceName: config.get('datadog.serviceName'),
-						},
-					},
-				};
-			},
-			inject: [ConfigService],
-		}),
+		NestLoggerModule.forRoot({}),
 	],
 
 	providers: [

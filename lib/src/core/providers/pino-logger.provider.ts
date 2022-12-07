@@ -9,12 +9,19 @@ export const PinoLoggerProvider: Provider = {
 	provide: PINO_LOGGER_PROVIDER_TOKEN,
 
 	useFactory: async (params: NestLoggerParams) => {
-		if (!params.contextBundle.stream) return pino({ enabled: false });
-        const writeStream = await datadog.createWriteStream({
-            apiKey: params.contextBundle.stream.datadogApiKey,
-            service: params.contextBundle.stream.datadogServiceName
-        })
-		return pinoms({ streams: [{ stream: writeStream }] });
+		let writeStream = null;
+
+		if(params?.contextBundle?.stream?.datadog) {
+			writeStream = await datadog.createWriteStream({
+				apiKey: params.contextBundle.stream.datadog.datadogApiKey,
+				service: params.contextBundle.stream.datadog.datadogServiceName
+			})
+		}
+
+		if(writeStream)
+			return pinoms({ streams: [{ stream: writeStream }] });
+
+		return pino({ enabled: false });
 	},
 
 	inject: [MODULE_OPTIONS_TOKEN],

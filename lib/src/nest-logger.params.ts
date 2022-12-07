@@ -24,25 +24,31 @@ export interface LoggerModuleAsyncParams {
 	inject?: any[]
 }
 
-export interface NestLoggerParams {
+export interface NestLoggerParamsContextBundleStrategy {
+	level?: NestLoggerLevelStrategy
+	onDispatch?: NestLoggerDispatchStrategy
+	onError?: NestLoggerOnErrorStrategy
+}
 
-	pinoHttp?: {
-		level?: string
-		logger?: pino.Logger
-	},
-
-	contextBundle: {
-		defaultLevel?: PinoLevels
-
-		strategy?: {
-			level?: NestLoggerLevelStrategy
-			onDispatch?: NestLoggerDispatchStrategy
-			onError?: NestLoggerOnErrorStrategy
-		}
-
-		stream?: {
-			datadogApiKey: string,
-			datadogServiceName: string
-		}
+export interface NestLoggerParamsContextBundleStreamDatadog {
+	datadog: {
+		datadogApiKey: string
+		datadogServiceName: string
 	}
+}
+
+export interface NestLoggerParamsPinoHttp {
+	level?: string
+	logger?: pino.Logger
+}
+
+export interface NestLoggerParamsContextBundle {
+	defaultLevel?: PinoLevels
+	strategy?: NestLoggerParamsContextBundleStrategy
+	stream?: NestLoggerParamsContextBundleStreamDatadog
+}
+
+export interface NestLoggerParams {
+	pinoHttp?: NestLoggerParamsPinoHttp
+	contextBundle?: NestLoggerParamsContextBundle
 }

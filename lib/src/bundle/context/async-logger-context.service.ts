@@ -55,7 +55,7 @@ export class NestAsyncLoggerContext {
 		const { logger, loggerBundle } = this.getCurrent();
 
 		//
-		if (this.params.contextBundle.strategy.onDispatch === NestLoggerDispatchStrategy.DISPATCH) {
+		if (this.params?.contextBundle?.strategy?.onDispatch === NestLoggerDispatchStrategy.DISPATCH) {
 			const { object, level } = loggerBundle.build();
 
 			//

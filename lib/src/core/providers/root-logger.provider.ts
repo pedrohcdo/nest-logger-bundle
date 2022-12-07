@@ -7,10 +7,10 @@ export const RootLoggerProvider: Provider = {
 	provide: ROOT_LOGGER_PROVIDER_TOKEN,
 
 	useFactory: (params: NestLoggerParams) => {
-		if (params.pinoHttp.logger) return params.pinoHttp.logger;
+		if (params?.pinoHttp?.logger) return params.pinoHttp.logger;
 		//
 		return pino({
-			...params.pinoHttp,
+			...(params?.pinoHttp || {}),
 			transport: {
 				target: 'pino-pretty',
 				options: {

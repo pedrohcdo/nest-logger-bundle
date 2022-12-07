@@ -37,7 +37,7 @@ export class LoggerBranch implements LoggerNode {
 		return this.exitedAt - this.createdAt;
 	}
 
-	introspectLevel(strategy: NestLoggerLevelStrategy, defaultLevel: PinoLevels = 'info'): PinoLevels {
+	introspectLevel(strategy: NestLoggerLevelStrategy = NestLoggerLevelStrategy.MAJOR_LEVEL, defaultLevel: PinoLevels = 'info'): PinoLevels {
 		let currentLevel: PinoLevels = null;
 		for (const branch of this.branchs) {
 			const cLevel = branch.introspectLevel(strategy, defaultLevel);

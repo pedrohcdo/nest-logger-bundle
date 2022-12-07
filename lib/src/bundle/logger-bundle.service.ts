@@ -1,5 +1,5 @@
 import { Inject, Injectable, Scope } from '@nestjs/common';
-import { NestLoggerParams } from '../nest-logger.params';
+import { NestLoggerLevelStrategy, NestLoggerParams } from '../nest-logger.params';
 import pino from 'pino';
 import { MODULE_OPTIONS_TOKEN } from '../nest-logger.module-definition';
 import { LoggerFunction } from './context/logger.definitions';
@@ -120,8 +120,8 @@ export class NestLoggerBundle {
 			...bindings,
 		};
 		const level = this.currentBranch.introspectLevel(
-			this.params.contextBundle.strategy.level,
-			this.params.contextBundle.defaultLevel
+			this.params?.contextBundle?.strategy?.level || NestLoggerLevelStrategy.MAJOR_LEVEL,
+			this.params?.contextBundle?.defaultLevel || 'info'
 		);
 
 		//
