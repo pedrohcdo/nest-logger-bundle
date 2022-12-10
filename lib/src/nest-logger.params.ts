@@ -8,14 +8,19 @@ export enum NestLoggerDispatchStrategy {
 	DISPATCH = 1,
 }
 
-export enum  NestLoggerLevelStrategy {
+export enum NestLoggerLevelStrategy {
 	MINOR_LEVEL = 0,
 	MAJOR_LEVEL = 1,
 	LAST_LEVEL = 2,
 }
 
-export enum  NestLoggerOnErrorStrategy {
+export enum NestLoggerOnErrorStrategy {
 	DISPATCH = 0,
+}
+
+export enum NestLoggerChanelsMode { 
+
+
 }
 
 export interface LoggerModuleAsyncParams {
@@ -28,6 +33,7 @@ export interface NestLoggerParamsContextBundleStrategy {
 	level?: NestLoggerLevelStrategy
 	onDispatch?: NestLoggerDispatchStrategy
 	onError?: NestLoggerOnErrorStrategy
+
 }
 
 export interface NestLoggerParamsContextBundleStreamDatadog {

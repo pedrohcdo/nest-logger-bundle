@@ -55,14 +55,7 @@ ________________
 
 ## How to use
 
-
-
-First we need to import the NestLoggerModule module in the module we want to use.
-
-> In my projects I usually import the 'NestLoggerModule' module in a global module that puts all the main dependencies of the project and also export the 'NestLoggerModule' to be visible to any other module as shown in the example project.
-
-
-Follow the minimum configuration:
+First we need to import the NestLoggerModule module in the module we want to use. Follow the minimum configuration:
 
 ```ts
 import { Global, Module } from '@nestjs/common';
@@ -99,18 +92,45 @@ import {
 export class GlobalModule {}
 
 ```
+> For the LoggerBundle to work correctly, it needs some points to be handled, for that there are two classes that are used to handle requests and errors, they are: `LoggerExceptionFilter` and `LoggerHttpInterceptor`.
+These classes need to be used in the global-scoped filters and interceptors like the example to be work across the whole application. `Remember to provide this filter and interceptor as in the example above in a global module or in the main module of your application.`
 
-For the LoggerBundle to work correctly, two important points need to be connected, which is the request interceptor and the application's exception filter. 
-By default this library provides two classes to correctly handle these ends, as shown in the example above `LoggerExceptionFilter` and `LoggerHttpInterceptor`.
+> If you already have a global scope filter or interceptor, follow the [tutorial](#custom-filter-and-interceptor): 
 
-### Configurações disponíveis:
+______
 
-The NestLoggerModule provides two ways of configuration, they are `NestLoggerModule.forRoot(config)` and `NestLoggerModule.forRootAsync(options)`, where:
+## Setting-up
 
-- Config Object example:
+  The NestLoggerModule provides two ways of configuration, they are:
 
-  *NestLoggerParams*
+- *Statically Config*<br/>
+  If you want to configure it statically, just use
+  
   ```ts
+  NestLoggerModule.forRoot({
+    // ... params
+  })
+  ```
+
+- *Asynchronously Config*<br/>
+  In case you want to pass the settings asynchronously
+  
+  ```ts
+  NestLoggerModule.forRootAsync({
+    isGlobal: boolean, // 
+    useFactory: (config: ConfigService): NestLoggerParams => {
+      return {
+        // ... params
+      }
+    },
+    inject: [ConfigService],
+  })
+  ```
+
+You must provide the desired parameters for the LoggerBundle, the parameters follow the following mode
+
+  ```ts
+  // NestLoggerParams
   {
     pinoHttp?: {
       level?: string // 
@@ -134,74 +154,53 @@ The NestLoggerModule provides two ways of configuration, they are `NestLoggerMod
   }
   ```
 
-- Option Object example:
+### Custom Filter and Interceptor
 
-  ```ts
-  {
-    isGlobal: boolean,
-    useFactory: (config: ConfigService): NestLoggerParams => {
-      return /** return an Config Object */
-    },
-    inject: [ConfigService],
-  }
-  ```
-
-
-
-______
-
-### Custom `LoggerExceptionFilter` and `LoggerHttpInterceptor`
-
-In some cases you will need to implement these two classes for some kind of treatment of your application, that way you can extend these classes as in the example below.
-`exemple-global-exception-filter.ts`
+If your application is already using a global/ interceptor scope filter, then you will probably have to extend these two classes (`LoggerExceptionFilter`, `LoggerHttpInterceptor`) as follows: 
 
 ```ts
+// example-global-exception-filter.ts
+
 import { ArgumentsHost, Catch } from '@nestjs/common';
 import { LoggerExceptionFilter } from '@pedrohcd/nest-logger';
 
 @Catch()
 export class GlobalExceptionFilter extends LoggerExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
+    // Your treatment
     super.catch(exception, host);
   }
 }
 
 ```
 
-`exemple-http-interceptor.ts`
 ```ts
+// example-http-interceptor.ts
+
 import { CallHandler, Catch, ExecutionContext } from '@nestjs/common';
 import { LoggerHttpInterceptor } from '@pedrohcd/nest-logger';
 import { Observable } from 'rxjs';
 
-@Catch()
+@Injectable()
 export class GlobalInterceptor extends LoggerHttpInterceptor {
-	intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
-		return super.intercept(context, next);
-	}
+  intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
+    // Your treatment
+    return super.intercept(context, next);
+  }
 }
 ```
 
-`global-module.ts`
 ```ts
-import { Global, Module } from '@nestjs/common';
+// example.ts
+// ...
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { GlobalExceptionFilter } from './exemple-global-exception-filter.ts'
-import { GlobalInterceptor } from './exemple-http-interceptor.ts'
-import {
-  NestLoggerModule,
-} from '@pedrohcd/nest-logger';
-
+import { GlobalExceptionFilter } from './example-global-exception-filter.ts'
+import { GlobalInterceptor } from './example-http-interceptor.ts'
 
 //
-@Global()
 @Module({
-  imports: [
-    // .. imports
-
-   NestLoggerModule.forRoot({})
-  ],
-
+  
+  // ...
   providers: [
     {
       provide: APP_FILTER,
@@ -213,11 +212,12 @@ import {
     },
   ],
 
-  exports: [NestLoggerModule /**, ... others exports */],
+  // ..
 })
-export class GlobalModule {}
-
+// ..
 ```
+
+### 
 
 
 ## Stay in touch
