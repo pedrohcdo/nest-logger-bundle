@@ -50,7 +50,7 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 							datadog: {
 								datadogApiKey: config.get('datadog.apiKey'),
 								datadogServiceName: config.get('datadog.serviceName'),
-							}
+							},
 						},
 					},
 				};
