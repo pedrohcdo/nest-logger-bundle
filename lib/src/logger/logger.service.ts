@@ -4,7 +4,6 @@ import pino from 'pino';
 import { NestAsyncLoggerContext } from '../bundle/context/async-logger-context.service';
 import { LoggerFunction, PinoMethods } from '../bundle/context/logger.definitions';
 import { LoggerBindingsContext, NestLoggerBundle } from '../bundle/logger-bundle.service';
-import { ROOT_LOGGER_PROVIDER_TOKEN } from '../nest-logger.params';
 
 @Injectable({
 	scope: Scope.TRANSIENT,
@@ -15,8 +14,6 @@ export class NestLoggerService implements PinoMethods, LoggerService {
 
 	constructor(
 		protected loggerContext: NestAsyncLoggerContext,
-		@Inject(ROOT_LOGGER_PROVIDER_TOKEN)
-		private rootLogger: pino.Logger,
 		private moduleRef: ModuleRef
 	) {
 		this.contextToken = null;
@@ -103,8 +100,8 @@ export class NestLoggerService implements PinoMethods, LoggerService {
 			}
 		}
 		this.bundle?.log(level, args[0], ...args.slice(1));
-		this.logger[level](args[0], ...args.slice(1));
-		this.logger.flush();
+		//this.logger[level](args[0], ...args.slice(1));
+		//this.logger.flush();
 	}
 
 	exit() {
@@ -121,10 +118,6 @@ export class NestLoggerService implements PinoMethods, LoggerService {
 		if (!this.dettachedFromBundle && this.loggerContext.hasContext())
 			return this.loggerContext.getCurrent().loggerBundle;
 		return null;
-	}
-
-	private get logger(): pino.Logger {
-		return this.rootLogger;
 	}
 }
 

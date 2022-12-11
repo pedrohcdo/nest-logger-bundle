@@ -1,7 +1,6 @@
 import pino from 'pino'
 import { PinoLevels } from './bundle/context/logger.definitions'
 export const PINO_LOGGER_PROVIDER_TOKEN = 'PINO_LOGGER_PROVIDER_TOKEN'
-export const ROOT_LOGGER_PROVIDER_TOKEN = 'ROOT_LOGGER_PROVIDER_TOKEN'
 
 export enum NestLoggerDispatchStrategy {
 	DISCARD = 0,
@@ -43,9 +42,21 @@ export interface NestLoggerParamsContextBundleStreamDatadog {
 	}
 }
 
-export interface NestLoggerParamsPinoHttp {
+export interface NestLoggerParamsPinoStream {
 	level?: string
 	logger?: pino.Logger
+
+	prettyPrint?: {
+		disabled?: boolean
+	},
+
+	timestamp?: {
+		disabled?: boolean,
+		format?: {
+			template: string,
+			timezone: string
+		}
+	}
 }
 
 export interface NestLoggerParamsContextBundle {
@@ -55,6 +66,6 @@ export interface NestLoggerParamsContextBundle {
 }
 
 export interface NestLoggerParams {
-	pinoHttp?: NestLoggerParamsPinoHttp
+	pinoStream?: NestLoggerParamsPinoStream
 	contextBundle?: NestLoggerParamsContextBundle
 }

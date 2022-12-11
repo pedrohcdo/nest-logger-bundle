@@ -1,6 +1,7 @@
-import { Inject, Injectable, ConsoleLogger } from '@nestjs/common';
+import { Inject, Injectable, ConsoleLogger, LogLevel } from '@nestjs/common';
 import pino from 'pino';
 import { PINO_LOGGER_PROVIDER_TOKEN } from '../nest-logger.params';
+import { yellow } from '@nestjs/common/utils/cli-colors.util'
 
 @Injectable()
 export class InternalLoggerService extends ConsoleLogger {
@@ -11,35 +12,35 @@ export class InternalLoggerService extends ConsoleLogger {
 	log(message: any, context?: string): void;
 	log(message: any, ...optionalParams: [...any, string?]): void;
 	log(message: any, ...optionalParams: any[]) {
-		super.log(message, ...optionalParams);
+		//super.log(message, ...optionalParams);
 		this.call('info', message, ...optionalParams);
 	}
 
 	error(message: any, context?: string): void;
 	error(message: any, ...optionalParams: [...any, string?]): void;
 	error(message: any, ...optionalParams: any[]) {
-		super.error(message, ...optionalParams);
+		//super.error(message, ...optionalParams);
 		this.call('error', message, ...optionalParams);
 	}
 
 	warn(message: any, context?: string): void;
 	warn(message: any, ...optionalParams: [...any, string?]): void;
 	warn(message: any, ...optionalParams: any[]) {
-		super.warn(message, ...optionalParams);
+		//super.warn(message, ...optionalParams);
 		this.call('warn', message, ...optionalParams);
 	}
 
 	debug(message: any, context?: string): void;
 	debug(message: any, ...optionalParams: [...any, string?]): void;
 	debug(message: any, ...optionalParams: any[]) {
-		super.debug(message, ...optionalParams);
+		//super.debug(message, ...optionalParams);
 		this.call('debug', message, ...optionalParams);
 	}
 
 	verbose(message: any, context?: string): void;
 	verbose(message: any, ...optionalParams: [...any, string?]): void;
 	verbose(message: any, ...optionalParams: any[]) {
-		super.verbose(message, ...optionalParams);
+		//super.verbose(message, ...optionalParams);
 		this.call('trace', message, ...optionalParams);
 	}
 
@@ -57,14 +58,26 @@ export class InternalLoggerService extends ConsoleLogger {
 		};
 	}
 
+    formatMessage(logLevel, contextMessage, message, timestampDiff) {
+        const output = this.stringifyMessage(message, logLevel);
+        return `${contextMessage}${output}${timestampDiff}`;
+    }
+
 	private call(level: pino.Level, message: any, context?: string): void;
 	private call(level: pino.Level, message: any, ...optionalParams: [...any, string?]): void;
-	private call(level: pino.Level, message: any, ...optionalParams: any[]) {
+	private call(level: pino.Level, message: any, ...optionalParams: any) {
+
 		const contextAndMessage = this.contextAndStringToMessage(message, ...optionalParams);
 		const firstMessage =
 			typeof contextAndMessage.messages === 'string'
 				? contextAndMessage.messages
 				: contextAndMessage.messages[0];
-		this.streamLogger.child(contextAndMessage)[level](firstMessage);
+				
+		const timestampDiff = (this as any).updateAndGetTimestampDiff();
+		const contextMessage = yellow(`[${contextAndMessage.context}] `);
+		const formattedMessage = this.formatMessage(level as LogLevel, contextMessage, message, timestampDiff);
+		//process[writeStreamType !== null && writeStreamType !== void 0 ? writeStreamType : 'stdout'].write(formattedMessage);
+
+		this.streamLogger.child({})[level](formattedMessage);
 	}
 }

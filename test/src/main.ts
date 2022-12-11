@@ -5,11 +5,14 @@ import { ConfigService } from '@nestjs/config'
 import { InternalLoggerService } from '@pedrohcd/nest-logger'
 
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule)
+	const app = await NestFactory.create(AppModule, {
+		bufferLogs: true
+	})
 	const configService = app.get(ConfigService)
 	const port = configService.get('PORT')
 
 	//
+	console.log("U")
 	const logger = app.get(InternalLoggerService);
 	app.useLogger(logger);
 

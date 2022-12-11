@@ -34,8 +34,20 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 			useFactory: (config: ConfigService): NestLoggerParams => {
 				return {
 					/** don't change this */
-					pinoHttp: {
-						level: !prod ? 'trace' : 'info',
+					//pinoHttp: {
+					//	level: !prod ? 'trace' : 'info',
+					//},
+
+					pinoStream: {
+						prettyPrint: {
+							disabled: false
+						},
+						timestamp: {
+							format: {
+								template: "DD/MM/YYYY - HH:mm:ss.SSS",
+								timezone: "America/Sao_Paulo"
+							}
+						}
 					},
 
 					// You can change this

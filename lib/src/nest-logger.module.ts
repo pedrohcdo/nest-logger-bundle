@@ -8,7 +8,7 @@ import {
 import pino from 'pino'
 import pinoHttp from 'pino-http'
 import { NestAsyncLoggerContext, NestLoggerBundle } from './bundle'
-import { NestLoggerHookMiddleware, PinoLoggerProvider, RootLoggerProvider } from './core'
+import { NestLoggerHookMiddleware, PinoLoggerProvider } from './core'
 import { InternalLoggerService, NestLoggerService } from './logger'
 import { ConfigurableModuleClass, MODULE_OPTIONS_TOKEN } from './nest-logger.module-definition'
 import { NestLoggerParams, PINO_LOGGER_PROVIDER_TOKEN } from './nest-logger.params'
@@ -19,7 +19,6 @@ import { NestLoggerParams, PINO_LOGGER_PROVIDER_TOKEN } from './nest-logger.para
 		NestLoggerService,
 		NestAsyncLoggerContext,
 		InternalLoggerService,
-		RootLoggerProvider,
 		PinoLoggerProvider
 	],
 	exports: [
@@ -27,7 +26,6 @@ import { NestLoggerParams, PINO_LOGGER_PROVIDER_TOKEN } from './nest-logger.para
 		NestLoggerService,
 		NestAsyncLoggerContext,
 		InternalLoggerService,
-		RootLoggerProvider,
 		PinoLoggerProvider
 	],
 })
@@ -41,7 +39,7 @@ export class NestLoggerModule extends ConfigurableModuleClass implements NestMod
 
 	async configure(consumer: MiddlewareConsumer) {
 		const middleware = pinoHttp({
-			...this.params.pinoHttp,
+			//...this.params.pinoHttp,
 			autoLogging: false,
 			customAttributeKeys: {
 				res: 'pinoRes',

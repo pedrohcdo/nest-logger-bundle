@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { NestLoggerService } from '@pedrohcd/nest-logger';
+import { AsyncLoggerService, NestLoggerService } from '@pedrohcd/nest-logger';
 @Injectable()
 export class SampleService {
 
@@ -16,8 +16,7 @@ export class SampleService {
 		this.logService.putTag("exemplo2", "123");
 
 		this.logService.log(valueToLog)
-		this.logService.exit();
-		
+
 		return valueToLog
 	}
 }
