@@ -35,10 +35,9 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 		NestLoggerModule.forRootAsync({
 			isGlobal: false,
 			useFactory: async (config: ConfigService): Promise<NestLoggerParams> => {
-
-				const datadogStream =  await datadog.createWriteStream({
+				const datadogStream = await datadog.createWriteStream({
 					apiKey: config.get('datadog.apiKey'),
-					service: config.get('datadog.serviceName')
+					service: config.get('datadog.serviceName'),
 				});
 
 				return {
@@ -48,17 +47,17 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 					//},
 
 					pinoStream: {
-						type: "default",
+						type: 'default',
 						prettyPrint: {
 							disabled: false,
 							options: {
-								colorize: true
-							}
+								colorize: true,
+							},
 						},
 						streams: [
 							{
-								stream: datadogStream
-							}
+								stream: datadogStream,
+							},
 						],
 						timestamp: {
 							format: {
@@ -74,7 +73,7 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 							onDispatch: NestLoggerDispatchStrategy.DISPATCH,
 							level: NestLoggerLevelStrategy.MAJOR_LEVEL,
 							onError: NestLoggerOnErrorStrategy.DISPATCH,
-						}
+						},
 					},
 				};
 			},

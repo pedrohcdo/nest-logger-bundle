@@ -40,7 +40,7 @@ ________________
 ## Installation
 
 ```bash
-$ npm i --save @pedrohcd/nest-logger-bundle
+$ npm i --save @pedrohcdo/nest-logger-bundle
 ```
 
 ## Samples
@@ -239,32 +239,132 @@ ______
   })
   ```
 
-You must provide the desired parameters for the LoggerBundle, the parameters follow the following mode
+You must provide the desired parameters for the LoggerBundle, the parameters follow the following schema
 
-  ```ts
-  // NestLoggerParams
-  {
-    pinoHttp?: {
-      level?: string // 
-      logger?: pino.Logger
+```ts
+// default config
+{
+  pinoStream: {
+    type: 'default',
+    prettyPrint: {
+      disabled: boolean,
+      options: pino.PrettyOptions,
     },
+    streams: pinoms.Streams,
+    timestamp: {
+      format: {
+        template: string,
+        timezone: string,
+      },
+    },
+  },
 
-    contextBundle: {
-      defaultLevel?: PinoLevels
-
-      strategy?: {
-        level?: NestLoggerLevelStrategy
-        onDispatch?: NestLoggerDispatchStrategy
-        onError?: NestLoggerOnErrorStrategy
-      }
-
-      stream?: {
-        datadogApiKey: string,
-        datadogServiceName: string
-      }
-    }
+  // You can change this
+  contextBundle: {
+    strategy: {
+      onDispatch: NestLoggerDispatchStrategy,
+      level: NestLoggerLevelStrategy,
+      onError: NestLoggerOnErrorStrategy,
+    },
   }
-  ```
+}
+```
+```ts
+// custom config
+{
+  pinoStream: {
+    type: 'custom',
+    logger: pino.Logger
+  },
+
+  // You can change this
+  contextBundle: {
+    strategy: {
+      onDispatch: NestLoggerDispatchStrategy,
+      level: NestLoggerLevelStrategy,
+      onError: NestLoggerOnErrorStrategy,
+    },
+  }
+}
+```
+
+Below is the description of each parameter
+
+- **NestLoggerParams**<br/>
+
+  | Param | Description 
+  | :--- | :----:
+  | `pinoStream`: NestLoggerParamsPinoStream \| NestLoggerParamsCustomPino | The NestLoggerBundle uses the `pino-multi-stream ` to transport the logs to several different destinations at the same time, for that it is necessary to use the `type: 'default'` so some parameters of `NestLoggerParamsPinoStream` will be provided, but if you choose to use a `type: 'custom'` some parameters of `NestLoggerParamsCustomPino` will be provided and you can use a pin logger configured in your own way.
+  |  `contextBundle`: NestLoggerParamsContextBundle | Here you can configure some behaviors related to how the bundle is created, for example, configure what the bundle's marjoritary level will be..
+
+- **NestLoggerParamsPinoStream**<br/>
+  If you choose to use the default configuration in `NestLoggerParams`, using '`{ type: 'default', ... }`' the options for these parameters will be provided
+  > It is worth remembering that it is recommended to use this configuration if you do not have the need to create your own configuration.
+
+  | Param | Description 
+  | :--- | :----:
+  | `type: 'default'` | For the options to follow this pattern you must set the type to `'default'`
+  | `prettyPrint`: NestLoggerParamsPrettyStream | Here you can configure `prettyStream`, choosing to disable it if necessary and also provide your `pin.PrettyOptions`
+  | `streams`: pinoms.Streams | You can also tell which streams you want pinoms handles, you can find implementations of various transporters that can be used here https://github.com/pinojs/pino/blob/master/docs/transports.md#legacy
+  | `timestamp`: NestLoggerParamsPinoTimestamp | You can also configure how the timestamp will be formatted in the logs informing a template and a timezone, the template is created with the help of `dayjs` to assemble the desired string you can use the symbols informed here https://day.js.org/docs/en/display/format
+
+    - **NestLoggerParamsPrettyStream**<br/>
+
+      | Param | Description 
+      | :--- | :----:
+      | `disabled`: boolean | If you want to disable the `prettyStream` you can pass `false` in this option `(remembering that, as it will be disabled the 'options' will not have any effects)`
+      | `options`: pino.PrettyOptions | Here you can pass some options provided by `pin`, like `{colorize: true}`
+
+    - **pinoms.Streams**<br/>
+
+      Here is an example of how to use a transport `(In this example, datadog is used)`
+      > To find more transporters, have a look at the pino repository in this section [Legacy](https://github.com/pinojs/pino/blob/master/docs/transports.md#legacy)
+
+      ```ts
+        import datadog from 'pino-datadog';
+
+        // ... 
+        NestLoggerModule.forRootAsync({
+          useFactory: async (config: ConfigService): Promise<NestLoggerParams> => {
+            const datadogStream = await datadog.createWriteStream({
+              apiKey: config.get('datadog.apiKey'),
+              service: config.get('datadog.serviceName'),
+            });
+
+            return {
+              // ...
+              pinoStream: {
+                type: 'default',
+                streams: [
+                  {
+                    stream: datadogStream,
+                  },
+                ],
+              },
+            };
+          },
+          inject: [ConfigService],
+        }),
+
+      ```
+
+    - **NestLoggerParamsPinoTimestamp**<br/>
+
+      | Param | Description 
+      | :--- | :----:
+      | `template`: string | To format the timezone your way, use a string that follows the pattern informed here [dayjs-formar](https://day.js.org/docs/en/display/format), eg: `'DD/MM/YYYY - HH:mm:ss.SSS'`
+      | `timezone`: string | Inform the timezone, you can find the valid timezones here [IANA database](https://www.iana.org/time-zones)
+
+
+
+- **NestLoggerParamsCustomPino**<br/>
+  But if you choose to use the default configuration in `NestLoggerParamsCustomPino`, using '`{ type: 'custom', ... }`' the options for these parameters will be provided
+
+  | Param | Description 
+  | :--- | :----:
+  | `type: 'custom'` | For the options to follow this pattern you must set the type to `'custom'`
+  | `logger`: pino.Logger | You can pass a logger that was configured your way
+
 
 ### Custom Filter and Interceptor
 
