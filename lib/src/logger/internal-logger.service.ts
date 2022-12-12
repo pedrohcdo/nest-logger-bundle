@@ -1,7 +1,7 @@
 import { Inject, Injectable, ConsoleLogger, LogLevel } from '@nestjs/common';
 import pino from 'pino';
 import { PINO_LOGGER_PROVIDER_TOKEN } from '../nest-logger.params';
-import { yellow } from '@nestjs/common/utils/cli-colors.util'
+import { yellow } from '@nestjs/common/utils/cli-colors.util';
 
 @Injectable()
 export class InternalLoggerService extends ConsoleLogger {
@@ -58,21 +58,20 @@ export class InternalLoggerService extends ConsoleLogger {
 		};
 	}
 
-    formatMessage(logLevel, contextMessage, message, timestampDiff) {
-        const output = this.stringifyMessage(message, logLevel);
-        return `${contextMessage}${output}${timestampDiff}`;
-    }
+	formatMessage(logLevel, contextMessage, message, timestampDiff) {
+		const output = this.stringifyMessage(message, logLevel);
+		return `${contextMessage}${output}${timestampDiff}`;
+	}
 
 	private call(level: pino.Level, message: any, context?: string): void;
 	private call(level: pino.Level, message: any, ...optionalParams: [...any, string?]): void;
 	private call(level: pino.Level, message: any, ...optionalParams: any) {
-
 		const contextAndMessage = this.contextAndStringToMessage(message, ...optionalParams);
 		const firstMessage =
 			typeof contextAndMessage.messages === 'string'
 				? contextAndMessage.messages
 				: contextAndMessage.messages[0];
-				
+
 		const timestampDiff = (this as any).updateAndGetTimestampDiff();
 		const contextMessage = yellow(`[${contextAndMessage.context}] `);
 		const formattedMessage = this.formatMessage(level as LogLevel, contextMessage, message, timestampDiff);

@@ -12,10 +12,7 @@ export class NestLoggerService implements PinoMethods, LoggerService {
 	private contextToken: string;
 	private dettachedFromBundle: boolean = false;
 
-	constructor(
-		protected loggerContext: NestAsyncLoggerContext,
-		private moduleRef: ModuleRef
-	) {
+	constructor(protected loggerContext: NestAsyncLoggerContext, private moduleRef: ModuleRef) {
 		this.contextToken = null;
 	}
 

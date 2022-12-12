@@ -7,6 +7,7 @@ import datadog from 'pino-datadog';
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
+
 dayjs.extend(utc)
 dayjs.extend(timezone)
 
@@ -14,25 +15,22 @@ export const PinoLoggerProvider: Provider = {
 	provide: PINO_LOGGER_PROVIDER_TOKEN,
 
 	useFactory: async (params: NestLoggerParams) => {
+		if(params.pinoStream.type === "custom")
+			return params.pinoStream.logger
 		
 		let streams = [];
 
 		if(!params?.pinoStream?.prettyPrint?.disabled) {
-			const prettyStream = pinoms.prettyStream({})
+			const prettyStream = pinoms.prettyStream({
+				prettyPrint: params?.pinoStream?.prettyPrint?.options || {}
+			})
 			streams.push({ 
 				stream: prettyStream
 			})
 		}
 
-		if(params?.contextBundle?.stream?.datadog) {
-			const datadogStream = await datadog.createWriteStream({
-				apiKey: params.contextBundle.stream.datadog.datadogApiKey,
-				service: params.contextBundle.stream.datadog.datadogServiceName
-			});
-
-			streams.push({
-				stream: datadogStream
-			})
+		if(params?.pinoStream?.streams) {
+			streams.push(...params?.pinoStream?.streams)
 		}
 
 		if(streams.length > 0) {

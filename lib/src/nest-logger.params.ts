@@ -1,4 +1,5 @@
 import pino from 'pino'
+import pinoms from 'pino-multi-stream'
 import { PinoLevels } from './bundle/context/logger.definitions'
 export const PINO_LOGGER_PROVIDER_TOKEN = 'PINO_LOGGER_PROVIDER_TOKEN'
 
@@ -35,37 +36,43 @@ export interface NestLoggerParamsContextBundleStrategy {
 
 }
 
-export interface NestLoggerParamsContextBundleStreamDatadog {
-	datadog: {
-		datadogApiKey: string
-		datadogServiceName: string
-	}
+export interface NestLoggerParamsPrettyStream {
+
+	disabled?: boolean
+	options?: pino.PrettyOptions
+}
+
+export interface NestLoggerParamsPinoTimestampFormat {
+
+	template: string
+	timezone: string
+}
+
+export interface NestLoggerParamsPinoTimestamp {
+
+	disabled?: boolean,
+	format?: NestLoggerParamsPinoTimestampFormat
+}
+
+export interface NestLoggerParamsCustomPino {
+	type: "custom"
+	level?: string
+	logger: pino.Logger
 }
 
 export interface NestLoggerParamsPinoStream {
-	level?: string
-	logger?: pino.Logger
-
-	prettyPrint?: {
-		disabled?: boolean
-	},
-
-	timestamp?: {
-		disabled?: boolean,
-		format?: {
-			template: string,
-			timezone: string
-		}
-	}
+	type: "default"
+	prettyPrint?: NestLoggerParamsPrettyStream
+	streams?: pinoms.Streams
+	timestamp?: NestLoggerParamsPinoTimestamp
 }
 
 export interface NestLoggerParamsContextBundle {
 	defaultLevel?: PinoLevels
 	strategy?: NestLoggerParamsContextBundleStrategy
-	stream?: NestLoggerParamsContextBundleStreamDatadog
 }
 
 export interface NestLoggerParams {
-	pinoStream?: NestLoggerParamsPinoStream
+	pinoStream?: NestLoggerParamsPinoStream | NestLoggerParamsCustomPino
 	contextBundle?: NestLoggerParamsContextBundle
 }

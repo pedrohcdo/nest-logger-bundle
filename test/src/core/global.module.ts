@@ -14,6 +14,9 @@ import {
 	NestLoggerParams,
 } from '@pedrohcd/nest-logger';
 
+import pinoms from 'pino-multi-stream';
+import datadog from 'pino-datadog';
+
 //
 const { NODE_ENV } = process.env;
 const prod = !NODE_ENV || NODE_ENV === 'production';
@@ -31,7 +34,13 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 		//
 		NestLoggerModule.forRootAsync({
 			isGlobal: false,
-			useFactory: (config: ConfigService): NestLoggerParams => {
+			useFactory: async (config: ConfigService): Promise<NestLoggerParams> => {
+
+				const datadogStream =  await datadog.createWriteStream({
+					apiKey: config.get('datadog.apiKey'),
+					service: config.get('datadog.serviceName')
+				});
+
 				return {
 					/** don't change this */
 					//pinoHttp: {
@@ -39,15 +48,24 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 					//},
 
 					pinoStream: {
+						type: "default",
 						prettyPrint: {
-							disabled: false
+							disabled: false,
+							options: {
+								colorize: true
+							}
 						},
+						streams: [
+							{
+								stream: datadogStream
+							}
+						],
 						timestamp: {
 							format: {
-								template: "DD/MM/YYYY - HH:mm:ss.SSS",
-								timezone: "America/Sao_Paulo"
-							}
-						}
+								template: 'DD/MM/YYYY - HH:mm:ss.SSS',
+								timezone: 'America/Sao_Paulo',
+							},
+						},
 					},
 
 					// You can change this
@@ -56,14 +74,7 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 							onDispatch: NestLoggerDispatchStrategy.DISPATCH,
 							level: NestLoggerLevelStrategy.MAJOR_LEVEL,
 							onError: NestLoggerOnErrorStrategy.DISPATCH,
-						},
-
-						stream: {
-							datadog: {
-								datadogApiKey: config.get('datadog.apiKey'),
-								datadogServiceName: config.get('datadog.serviceName'),
-							},
-						},
+						}
 					},
 				};
 			},
