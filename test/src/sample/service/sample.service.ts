@@ -3,20 +3,44 @@ import { AsyncLoggerService, NestLoggerService } from '@pedrohcd/nest-logger';
 @Injectable()
 export class SampleService {
 
-	constructor(private logService: NestLoggerService) {
-		this.logService.setContextToken("SampleService")
+	constructor(
+	  private logService: NestLoggerService
+	) {
+	  this.logService.setContextToken(SampleService.name)
 	}
-
-	async logSample(valueToLog: string): Promise<string> {
-
-		this.logService.putTag("exemplo1", "123");
-
-		this.logService.enter("A");
-		
-		this.logService.putTag("exemplo2", "123");
-
-		this.logService.log(valueToLog)
-
-		return valueToLog
+  
+	private async findUserByEmail(email: string){
+	  this.logService.enter('finding user by email ')
+	  this.logService.log('finding...')
+	  // ....
+	  this.logService.exit()
+  
+	  return null;
 	}
-}
+  
+	private async saveUser(email: string, username: string){
+	  this.logService.enter('creating user')
+  
+	  this.logService.log(`checking if the user with email '${email}' already exists...`)
+	  const user = await this.findUserByEmail(email);
+  
+	  if(!user) {
+		// create user ....
+		this.logService.log('user created %s %s', email, username)
+	  } else {
+		this.logService.log('A user with that email already exists')
+	  }
+  
+	  // ...
+	  this.logService.exit()
+  
+	  return {}
+	}
+  
+	async logSample(email: string, username: string){
+	  this.logService.log('log example')
+	  this.logService.putTag("test", "test 123")
+	  await this.saveUser(email, username);
+	}
+  }
+  

@@ -141,19 +141,107 @@ export class SampleUserService {
 
   async createUser(email: string, username: string){
     this.logService.log('log example')
+    this.logService.putTag("test", "test 123")
     await this.saveUser(email, username);
   }
 }
 
 ```
-
-If the `SampleUserService.createUser()` function is called, the log structure that will be generated will be like the example below:
-
-..
-
-> An important point is that asynchronous function calls without an await allow the flow of a request to end even before everything is executed, in this case read the section:
+> An important point is that asynchronous function calls without an await allow the flow of a request to end even before everything is executed, in this case read the section [Async Call's](#async-calls)
 
 > Remembering that the name of the current service can be acquired by `<Class>.name`, so you can change the name of the context of the LoggerBundle right at the beginning using as shown in the example above: `this.logService.setContextToken(SampleService.name)`
+
+If the `SampleUserService.createUser(email, username)` function is called, the log structure that will be generated will be like the example below:
+
+```json
+{
+  logs: {
+    "profiling": "6ms",
+    "name": "root",
+    "logs": [
+      {
+        "level": "info",
+        "message": "log example",
+        "context": "SampleService"
+      },
+      {
+        "profiling": "0ms",
+        "name": "creating user",
+        "logs": [
+          {
+            "level": "info",
+            "message": "checking if the user with email 'teste@teste.com' already exists...",
+            "context": "SampleService"
+          },
+          {
+            "profiling": "0ms",
+            "name": "finding user by email ",
+            "logs": [
+              {
+                "level": "info",
+                "message": "finding...",
+                "context": "SampleService"
+              }
+            ]
+          },
+          {
+            "level": "info",
+            "message": "user created teste@teste.com Teste 123",
+            "context": "SampleService"
+          }
+        ]
+      }
+    ]
+  }
+  context: {
+    "requestDuration": <duration>,
+    "method": "GET",
+    "path": "/sample/create-user/teste%40teste.com/Teste%20123",
+    "ip": <ip>
+  },
+  tags: {
+    "test": "test 123"
+  },
+  req: <request object>,
+  res: <response object>
+}
+```
+
+The log will display 5 objects, they are:
+
+| Object | Description 
+| :--- | :----:
+| `logs` | A bundle containing the entire log tree including a time profiling between each log.
+| `context` | The context in which this log bundle was created, containing information such as api path, method..
+| `tags` | The tags created in this context
+| `req` | The body of the request that originated this bundle
+| `res` | If it is a complete request context here you will be able to see the response of that request
+
+The generated bundle follows the following structure, where the `logs` array can contain more log nodes like the example
+
+```ts
+{
+  "profiling": number, // Here the overall time is displayed
+  "name": "root", // The first branch is always root
+  "logs": [
+    // Structure of a log
+    {
+      "level": string,
+      "message": string,
+      "context": string
+    },
+    // Structure of an 'enter/ exit' branch
+    {
+      "profiling": number, // The time this node took to run
+      "name": string, // The branch nrame, where it is passed on 'enter(whiteName)'
+      "logs": [
+        ... // Logs of this branch, remembering that it can have as many levels as necessary
+      ] 
+    },
+    // ... others logs 
+  ] 
+}
+```
 
 There are some methods available for use in NestLoggerService, here is a list of them
 
