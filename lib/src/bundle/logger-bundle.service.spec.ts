@@ -4,10 +4,11 @@ import pino from 'pino';
 import { TestUtils } from 'test-utils';
 import { MODULE_OPTIONS_TOKEN } from '../nest-logger.module-definition';
 import {
+	BUNDLE_LOGGER_PROVIDER_TOKEN,
+	LINE_LOGGER_PROVIDER_TOKEN,
 	NestLoggerDispatchStrategy,
 	NestLoggerLevelStrategy,
 	NestLoggerOnErrorStrategy,
-	PINO_LOGGER_PROVIDER_TOKEN,
 } from '../nest-logger.params';
 import { NestLoggerBundleModule } from './logger-bundle.module';
 import { NestLoggerBundle } from './logger-bundle.service';
@@ -36,7 +37,8 @@ describe('NestLoggerBundle', () => {
 						},
 					},
 				],
-				[PINO_LOGGER_PROVIDER_TOKEN, pino({ enabled: false })],
+				[BUNDLE_LOGGER_PROVIDER_TOKEN, pino({ enabled: false })],
+				[LINE_LOGGER_PROVIDER_TOKEN, pino({ enabled: false })],
 			]
 		);
 	});

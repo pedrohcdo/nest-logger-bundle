@@ -2,11 +2,6 @@
   <a href="http://nestjs.com/" target="blank"><img src="./logger-bundle.png" width="250" alt="Nest Logo" /></a>
 </p>
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-
 <p align="center">A flexible Logger created to use with <a href="http://nodejs.org" target="blank">Nest.js</a> framework for wrap all logs with an Request or Async context in a bundle.</p>
 <p align="center">
   <a href="https://www.npmjs.com/package/nest-logger-bundle"><img src="https://img.shields.io/npm/v/nest-logger-bundle" alt="NPM Version" /></a>

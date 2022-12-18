@@ -12,6 +12,7 @@ import {
 	NestLoggerModule,
 	NestLoggerOnErrorStrategy,
 	NestLoggerParams,
+	NestLoggerParamsLogggerMode,
 } from 'nest-logger-bundle';
 
 import pinoms from 'pino-multi-stream';
@@ -41,19 +42,23 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 				});
 
 				return {
-					pinoStream: {
+					loggers: {
 						type: 'default',
 						prettyPrint: {
+							mode: NestLoggerParamsLogggerMode.LOG_BUNDLE,
 							disabled: false,
 							options: {
 								colorize: true,
-							},
+							}
 						},
-						streams: [
-							{
-								stream: datadogStream,
-							},
-						],
+						streams: {
+							mode: NestLoggerParamsLogggerMode.LOG_BUNDLE,
+							pinoStreams: [
+								{
+									stream: datadogStream,
+								},
+							]
+						},
 						timestamp: {
 							format: {
 								template: 'DD/MM/YYYY - HH:mm:ss.SSS',

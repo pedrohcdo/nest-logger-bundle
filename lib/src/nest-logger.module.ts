@@ -8,10 +8,12 @@ import {
 import pino from 'pino'
 import pinoHttp from 'pino-http'
 import { NestAsyncLoggerContext, NestLoggerBundle } from './bundle'
-import { NestLoggerHookMiddleware, PinoLoggerProvider } from './core'
+import { NestLoggerHookMiddleware } from './core'
+import { BundleLoggerProvider } from './core/providers/bundle-logger.provider'
+import { LineLoggerProvider } from './core/providers/pretty-logger.provider'
 import { InternalLoggerService, NestLoggerService } from './logger'
-import { ConfigurableModuleClass, MODULE_OPTIONS_TOKEN } from './nest-logger.module-definition'
-import { NestLoggerParams, PINO_LOGGER_PROVIDER_TOKEN } from './nest-logger.params'
+import { ConfigurableModuleClass } from './nest-logger.module-definition'
+import { BUNDLE_LOGGER_PROVIDER_TOKEN } from './nest-logger.params'
 
 @Module({
 	providers: [
@@ -19,20 +21,21 @@ import { NestLoggerParams, PINO_LOGGER_PROVIDER_TOKEN } from './nest-logger.para
 		NestLoggerService,
 		NestAsyncLoggerContext,
 		InternalLoggerService,
-		PinoLoggerProvider
+		BundleLoggerProvider,
+		LineLoggerProvider
 	],
 	exports: [
 		NestLoggerBundle,
 		NestLoggerService,
 		NestAsyncLoggerContext,
 		InternalLoggerService,
-		PinoLoggerProvider
+		LineLoggerProvider,
+		LineLoggerProvider
 	],
 })
 export class NestLoggerModule extends ConfigurableModuleClass implements NestModule {
 	constructor(
-		@Inject(MODULE_OPTIONS_TOKEN) private params: NestLoggerParams,
-		@Inject(PINO_LOGGER_PROVIDER_TOKEN) private pinoLogger: pino.Logger
+		@Inject(BUNDLE_LOGGER_PROVIDER_TOKEN) private bundleLogger: pino.Logger,
 	) {
 		super()
 	}
@@ -44,7 +47,7 @@ export class NestLoggerModule extends ConfigurableModuleClass implements NestMod
 			customAttributeKeys: {
 				res: 'pinoRes',
 			},
-			logger: this.pinoLogger,
+			logger: this.bundleLogger,
 		})
 
 		consumer.apply(middleware, NestLoggerHookMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL })

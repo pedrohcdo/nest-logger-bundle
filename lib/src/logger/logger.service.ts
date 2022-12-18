@@ -1,5 +1,6 @@
 import { Inject, Injectable, Scope, LoggerService } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
+import { LINE_LOGGER_PROVIDER_TOKEN } from 'nest-logger-bundle/nest-logger.params';
 import pino from 'pino';
 import { NestAsyncLoggerContext } from '../bundle/context/async-logger-context.service';
 import { LoggerFunction, PinoMethods } from '../bundle/context/logger.definitions';
@@ -12,7 +13,11 @@ export class NestLoggerService implements PinoMethods, LoggerService {
 	private contextToken: string;
 	private dettachedFromBundle: boolean = false;
 
-	constructor(protected loggerContext: NestAsyncLoggerContext, private moduleRef: ModuleRef) {
+	constructor(
+		protected loggerContext: NestAsyncLoggerContext,
+		private moduleRef: ModuleRef,
+		@Inject(LINE_LOGGER_PROVIDER_TOKEN) private lineLogger: pino.Logger
+	) {
 		this.contextToken = null;
 	}
 
@@ -97,8 +102,7 @@ export class NestLoggerService implements PinoMethods, LoggerService {
 			}
 		}
 		this.bundle?.log(level, args[0], ...args.slice(1));
-		//this.logger[level](args[0], ...args.slice(1));
-		//this.logger.flush();
+		this.lineLogger[level](args[0], ...args.slice(1));
 	}
 
 	exit() {

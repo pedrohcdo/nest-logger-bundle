@@ -1,11 +1,14 @@
 import { Inject, Injectable, ConsoleLogger, LogLevel } from '@nestjs/common';
 import pino from 'pino';
-import { PINO_LOGGER_PROVIDER_TOKEN } from '../nest-logger.params';
 import { yellow } from '@nestjs/common/utils/cli-colors.util';
+import { BUNDLE_LOGGER_PROVIDER_TOKEN, LINE_LOGGER_PROVIDER_TOKEN } from 'nest-logger-bundle/nest-logger.params';
 
 @Injectable()
 export class InternalLoggerService extends ConsoleLogger {
-	constructor(@Inject(PINO_LOGGER_PROVIDER_TOKEN) private streamLogger: pino.Logger) {
+	constructor(
+		@Inject(LINE_LOGGER_PROVIDER_TOKEN) private lineLogger: pino.Logger,
+		@Inject(BUNDLE_LOGGER_PROVIDER_TOKEN) private bundleLogger: pino.Logger
+	) {
 		super();
 	}
 
@@ -77,6 +80,14 @@ export class InternalLoggerService extends ConsoleLogger {
 		const formattedMessage = this.formatMessage(level as LogLevel, contextMessage, message, timestampDiff);
 		//process[writeStreamType !== null && writeStreamType !== void 0 ? writeStreamType : 'stdout'].write(formattedMessage);
 
-		this.streamLogger.child({})[level](formattedMessage);
+		// It is worth remembering that it will never send to repeated channels, 
+		// for example, each logger will always have its unique destination, and some of them may be 'enabled = false'
+		// Possible combinations:
+		//    bundleLogger -> streams, pretty /  lineLogger -> disabled
+		//    lineLogger -> streams, pretty /  bundleLogger -> disabled
+		//    bundleLogger -> stream /  lineLogger -> pretty
+		//    bundleLogger -> pretty /  lineLogger -> stream
+		this.lineLogger.child({})[level](formattedMessage);
+		this.bundleLogger.child({})[level](formattedMessage);
 	}
 }

@@ -3,9 +3,10 @@ import { ModuleRef } from '@nestjs/core';
 import pino from 'pino';
 import { MODULE_OPTIONS_TOKEN } from '../../nest-logger.module-definition';
 import {
+	BUNDLE_LOGGER_PROVIDER_TOKEN,
+	LINE_LOGGER_PROVIDER_TOKEN,
 	NestLoggerDispatchStrategy,
-	NestLoggerParams,
-	PINO_LOGGER_PROVIDER_TOKEN,
+	NestLoggerParams
 } from '../../nest-logger.params';
 import { NestLoggerBundle } from '../logger-bundle.service';
 import { NestLoggerStorage } from './async-logger.hook';
@@ -24,7 +25,7 @@ export class NestAsyncLoggerContext {
 
 	constructor(
 		@Inject(MODULE_OPTIONS_TOKEN) private params: NestLoggerParams,
-		@Inject(PINO_LOGGER_PROVIDER_TOKEN) private streamLogger: pino.Logger,
+		@Inject(BUNDLE_LOGGER_PROVIDER_TOKEN) private bundleLogger: pino.Logger,
 		private moduleRef: ModuleRef
 	) {}
 
@@ -92,7 +93,7 @@ export class NestAsyncLoggerContext {
 			getFrom = this.getCurrent();
 		} else {
 			getFrom = {
-				logger: this.streamLogger,
+				logger: this.bundleLogger,
 				loggerBundle: null,
 				reqId: '<unknown>',
 			};
