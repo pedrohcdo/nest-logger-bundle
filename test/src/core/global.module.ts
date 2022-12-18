@@ -45,7 +45,7 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 					loggers: {
 						type: 'default',
 						prettyPrint: {
-							mode: NestLoggerParamsLogggerMode.LOG_BUNDLE,
+							mode: NestLoggerParamsLogggerMode.LOG_LINE,
 							disabled: false,
 							options: {
 								colorize: true,
