@@ -7,18 +7,15 @@
 [linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
 [linux-url]: https://travis-ci.org/nestjs/nest
 
-  <p align="center">A flexible Logger created to use with <a href="http://nodejs.org" target="blank">Nest.js</a> framework for wrap all logs with an Request or Async context in a bundle.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+<p align="center">A flexible Logger created to use with <a href="http://nodejs.org" target="blank">Nest.js</a> framework for wrap all logs with an Request or Async context in a bundle.</p>
+<p align="center">
+  <a href="https://www.npmjs.com/package/nest-logger-bundle"><img src="https://img.shields.io/npm/v/nest-logger-bundle" alt="NPM Version" /></a>
+  <a href="https://github.com/pedrohcdo/nest-logger-bundle/blob/master/LICENSE"><img src="https://img.shields.io/github/license/pedrohcdo/nest-logger-bundle" alt="Package License" /></a>
+  <a href="https://snyk.io/test/github/pedrohcdo/nest-logger-bundle">
+    <img alt="Snyk Vulnerabilities for npm package" src="https://img.shields.io/snyk/vulnerabilities/npm/nest-logger-bundle" />
+  </a>
+  <img alt="Libraries.io" src="https://img.shields.io/librariesio/release/npm/nest-logger-bundle">
+  <img alt="Supported platforms: Express & Fastify" src="https://img.shields.io/badge/platforms-Express%20%26%20Fastify-green" />
 </p>
 
 ## Description
@@ -40,7 +37,7 @@ ________________
 ## Installation
 
 ```bash
-$ npm i --save @pedrohcdo/nest-logger-bundle
+$ npm i --save nest-logger-bundle
 ```
 
 ## Samples
@@ -64,7 +61,7 @@ import {
   NestLoggerModule,
   LoggerExceptionFilter,
   LoggerHttpInterceptor
-} from '@pedrohcd/nest-logger';
+} from 'nest-logger-bundle';
 
 
 //
@@ -462,7 +459,7 @@ If your application is already using a global/ interceptor scope filter, then yo
 // example-global-exception-filter.ts
 
 import { ArgumentsHost, Catch } from '@nestjs/common';
-import { LoggerExceptionFilter } from '@pedrohcd/nest-logger';
+import { LoggerExceptionFilter } from 'nest-logger-bundle';
 
 @Catch()
 export class GlobalExceptionFilter extends LoggerExceptionFilter {
@@ -478,7 +475,7 @@ export class GlobalExceptionFilter extends LoggerExceptionFilter {
 // example-http-interceptor.ts
 
 import { CallHandler, Catch, ExecutionContext } from '@nestjs/common';
-import { LoggerHttpInterceptor } from '@pedrohcd/nest-logger';
+import { LoggerHttpInterceptor } from 'nest-logger-bundle';
 import { Observable } from 'rxjs';
 
 @Injectable()
@@ -522,7 +519,7 @@ import { GlobalInterceptor } from './example-http-interceptor.ts'
 In case you need to call some asynchronous function and not block the execution with `await` this can create a point of failure for the `LoggerBundle`, this failure is not serious but it can create confusion when interpreting the logs, this happens because a request that originated this call can end before the async function finishes, so when the request is finished the `LoggerBundle` assembles a bundle and transports it, so the async call that can still be loose and calling logging in will not be packaged in the same bundle, these logs they would be lost. For this there is a function that creates an asynchronous `LoggerBundle` and transfers you the responsibility of transporting the log at the end of the asynchronous flow. An example of usage is shown below
 
 ```ts
-import { AsyncLoggerService, NestLoggerService } from '@pedrohcd/nest-logger';
+import { AsyncLoggerService, NestLoggerService } from 'nest-logger-bundle';
 
 @Injectable()
 export class SampleUserService {

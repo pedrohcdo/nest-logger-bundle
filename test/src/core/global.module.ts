@@ -12,7 +12,7 @@ import {
 	NestLoggerModule,
 	NestLoggerOnErrorStrategy,
 	NestLoggerParams,
-} from '@pedrohcd/nest-logger';
+} from 'nest-logger-bundle';
 
 import pinoms from 'pino-multi-stream';
 import datadog from 'pino-datadog';
@@ -41,11 +41,6 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 				});
 
 				return {
-					/** don't change this */
-					//pinoHttp: {
-					//	level: !prod ? 'trace' : 'info',
-					//},
-
 					pinoStream: {
 						type: 'default',
 						prettyPrint: {

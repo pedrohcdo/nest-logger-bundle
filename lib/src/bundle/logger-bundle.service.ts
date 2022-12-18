@@ -18,9 +18,9 @@ export interface LoggerBindingsContext {
 }
 
 export interface LoggerBindings {
-	tgContext: LoggerBindingsContext;
+	context: LoggerBindingsContext;
 
-	tgTags: {
+	tags: {
 		[key: string]: string;
 	};
 }
@@ -44,24 +44,24 @@ export class NestLoggerBundle {
 	constructor(@Inject(MODULE_OPTIONS_TOKEN) private params: NestLoggerParams) {
 		this.currentBranch = new LoggerBranch(null, 'root');
 		this.bindings = {
-			tgContext: {},
-			tgTags: {},
+			context: {},
+			tags: {},
 		};
 	}
 
 	setContext(context: LoggerBindingsContext) {
-		Object.assign(this.bindings.tgContext, context);
+		Object.assign(this.bindings.context, context);
 	}
 
 	putTag(tag: string, value: string) {
-		this.bindings.tgTags[tag] = value;
+		this.bindings.tags[tag] = value;
 	}
 
 	copyFrom(otherBundle: NestLoggerBundle) {
 		this.currentBranch = otherBundle.getRootBranch().clone() as LoggerBranch;
 		this.bindings = {
-			tgContext: Object.assign({}, otherBundle.bindings.tgContext),
-			tgTags: Object.assign({}, otherBundle.bindings.tgTags),
+			context: Object.assign({}, otherBundle.bindings.context),
+			tags: Object.assign({}, otherBundle.bindings.tags),
 		};
 	}
 
@@ -97,20 +97,20 @@ export class NestLoggerBundle {
 
 		///
 		const bindings = {
-			tgContext: Object.assign(
+			context: Object.assign(
 				{
 					requestDuration: this.currentBranch.profiling(),
 				},
-				this.bindings.tgContext
+				this.bindings.context
 			),
 
-			tgTags: Object.assign({}, this.bindings.tgTags),
+			tags: Object.assign({}, this.bindings.tags),
 		};
-		delete bindings.tgContext.response;
+		delete bindings.context.response;
 
-		if (this.bindings.tgContext.response) {
+		if (this.bindings.context.response) {
 			Object.assign(bindings, {
-				res: this.bindings.tgContext.response,
+				res: this.bindings.context.response,
 			});
 		}
 

@@ -1,5 +1,5 @@
 import { CallHandler, Catch, ExecutionContext, Injectable } from '@nestjs/common';
-import { LoggerHttpInterceptor } from '@pedrohcd/nest-logger';
+import { LoggerHttpInterceptor } from 'nest-logger-bundle';
 import { Observable } from 'rxjs';
 
 @Injectable()

@@ -1,5 +1,5 @@
 {
-  "name": "@pedrohcdo/nest-logger-bundle",
+  "name": "nest-logger-bundle",
   "version": "0.1.5",
   "author": "Pedro Henrique C. (pedrohcdo)",
   "main": "dist/lib/index.js",
@@ -82,10 +82,10 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {
-      "@pedrohcd/nest-logger": [
+      "nest-logger-bundle": [
         "<rootDir>/lib/src"
       ],
-      "@pedrohcd/nest-logger/*": [
+      "nest-logger-bundle/*": [
         "<rootDir>/lib/src/*"
       ],
       "test-utils": [
