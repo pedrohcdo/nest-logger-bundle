@@ -148,7 +148,7 @@ If the `SampleUserService.createUser(email, username)` function is called, the l
 ```json
 {
   logs: {
-    "profiling": "6ms",
+    "profiling": <duration>,
     "name": "root",
     "logs": [
       {
@@ -157,7 +157,7 @@ If the `SampleUserService.createUser(email, username)` function is called, the l
         "context": "SampleService"
       },
       {
-        "profiling": "0ms",
+        "profiling": <duration>,
         "name": "creating user",
         "logs": [
           {
@@ -166,7 +166,7 @@ If the `SampleUserService.createUser(email, username)` function is called, the l
             "context": "SampleService"
           },
           {
-            "profiling": "0ms",
+            "profiling": <duration>,
             "name": "finding user by email ",
             "logs": [
               {
@@ -189,10 +189,10 @@ If the `SampleUserService.createUser(email, username)` function is called, the l
     "requestDuration": <duration>,
     "method": "GET",
     "path": "/sample/create-user/teste%40teste.com/Teste%20123",
-    "ip": <ip>
-  },
-  tags: {
-    "test": "test 123"
+    "ip": <ip>,
+    tags: {
+      "test": "test 123"
+    },
   },
   req: <request object>,
   res: <response object>
@@ -203,11 +203,11 @@ The log will display 5 objects, they are:
 
 | Object | Description 
 | :--- | :----:
-| `logs` | A bundle containing the entire log tree including a time profiling between each log.
-| `context` | The context in which this log bundle was created, containing information such as api path, method..
-| `tags` | The tags created in this context
-| `req` | The body of the request that originated this bundle
-| `res` | If it is a complete request context here you will be able to see the response of that request
+| ***logs*** | A bundle containing the entire `logs` tree including a time profiling between each log.
+| ***context*** | The `context` in which this log bundle was created, containing information such as api path, method..
+| ***context.tags*** | The `tags` created in this context
+| ***req*** | The body of the `request` that originated this bundle
+| ***res*** | If it is a complete request context here you will be able to see the `response` of that request
 
 The generated bundle follows the following structure, where the `logs` array can contain more log nodes like the example
 
@@ -277,9 +277,9 @@ There are some methods available for use in NestLoggerService, here is a list of
 
   | Method | Description 
   | :--- | :----:
-  | `enter(`branchName`)` | This method creates a node in the log tree where the '`branchName`' is an string that will be the name of the subtree of logs
-  | `exit()` | This method closes the current subtree, remembering that the same amount opened with `enter()` must be closed with `exit()`
-  | `putTag(`tagName, tagValue`)` | Where the '`tagName`' and '`tagValue`' are strings. This method adds a tag in the current context, the tags have no direct relation with the `enter()` and `exit()` methods, so regardless of the current state of the tree, the tags will be added separately in the bundle.
+  | ***enter(`branchName`)*** | This method creates a node in the log tree where the '`branchName`' is an string that will be the name of the subtree of logs
+  | ***exit()*** | This method closes the current subtree, remembering that the same amount opened with `enter()` must be closed with `exit()`
+  | ***putTag(`tagName, tagValue`)*** | Where the '`tagName`' and '`tagValue`' are strings. This method adds a tag in the current context, the tags have no direct relation with the `enter()` and `exit()` methods, so regardless of the current state of the tree, the tags will be added separately in the bundle.
 
 - Async Methods
 
@@ -287,7 +287,7 @@ There are some methods available for use in NestLoggerService, here is a list of
 
   | Method | Description 
   | :--- | :----:
-  |  `createAsyncLogger()` | Creates an asynchronous LoggerBundle, where the responsibility for transporting the bundle is on your side
+  |  ***createAsyncLogger()*** | Creates an asynchronous LoggerBundle, where the responsibility for transporting the bundle is on your side
 
 ______
 
@@ -324,13 +324,17 @@ You must provide the desired parameters for the LoggerBundle, the parameters fol
 ```ts
 // default config
 {
-  pinoStream: {
+  loggers: {
     type: 'default',
     prettyPrint: {
+      mode: NestLoggerParamsLogggerMode, // DEFAULT IS LOG_BUNDLE
       disabled: boolean,
       options: pino.PrettyOptions,
     },
-    streams: pinoms.Streams,
+    streams: {
+      mode: NestLoggerParamsLogggerMode, // DEFAULT IS LOG_BUNDLE
+      pinoStreams: pinoms.Streams
+    },
     timestamp: {
       format: {
         template: string,
@@ -352,9 +356,12 @@ You must provide the desired parameters for the LoggerBundle, the parameters fol
 ```ts
 // custom config
 {
-  pinoStream: {
+  loggers: {
     type: 'custom',
-    logger: pino.Logger
+    logger: pino.Logger,
+    level?: string,
+    bundleLogger: pino.Logger
+    lineLogger?: pino.Logger
   },
 
   // You can change this
@@ -374,26 +381,43 @@ Below is the description of each parameter
 
   | Param | Description 
   | :--- | :----:
-  | `pinoStream`: NestLoggerParamsPinoStream \| NestLoggerParamsCustomPino | The NestLoggerBundle uses the `pino-multi-stream ` to transport the logs to several different destinations at the same time, for that it is necessary to use the `type: 'default'` so some parameters of `NestLoggerParamsPinoStream` will be provided, but if you choose to use a `type: 'custom'` some parameters of `NestLoggerParamsCustomPino` will be provided and you can use a pin logger configured in your own way.
-  |  `contextBundle`: NestLoggerParamsContextBundle | Here you can configure some behaviors related to how the bundle is created, for example, configure what the bundle's marjoritary level will be..
+  | ***loggers***: NestLoggerParamsPinoStream \| NestLoggerParamsCustomPino | The NestLoggerBundle uses the `pino-multi-stream ` to transport the logs to several different destinations at the same time, for that it is necessary to use the `type: 'default'` so some parameters of `NestLoggersParamsStream` will be provided, but if you choose to use a `type: 'custom'` some parameters of `NestLoggersParamsCustom` will be provided and you can use a pin logger configured in your own way.
+  |  ***contextBundle***: NestLoggerParamsContextBundle | Here you can configure some behaviors related to how the bundle is created, for example, configure what the bundle's marjoritary level will be..
 
-- **NestLoggerParamsPinoStream**<br/>
+- **NestLoggersParamsStream**<br/>
   If you choose to use the default configuration in `NestLoggerParams`, using '`{ type: 'default', ... }`' the options for these parameters will be provided
   > It is worth remembering that it is recommended to use this configuration if you do not have the need to create your own configuration.
 
   | Param | Description 
   | :--- | :----:
-  | `type: 'default'` | For the options to follow this pattern you must set the type to `'default'`
-  | `prettyPrint`: NestLoggerParamsPrettyStream | Here you can configure `prettyStream`, choosing to disable it if necessary and also provide your `pin.PrettyOptions`
-  | `streams`: pinoms.Streams | You can also tell which streams you want pinoms handles, you can find implementations of various transporters that can be used here https://github.com/pinojs/pino/blob/master/docs/transports.md#legacy
-  | `timestamp`: NestLoggerParamsPinoTimestamp | You can also configure how the timestamp will be formatted in the logs informing a template and a timezone, the template is created with the help of `dayjs` to assemble the desired string you can use the symbols informed here https://day.js.org/docs/en/display/format
+  | ***type***: `'default'` | For the options to follow this pattern you must set the type to `'default'`
+  | ***prettyPrint***: NestLoggersParamsPretty | Here you can configure `prettyStream`, choosing to disable it if necessary and also provide your `pin.PrettyOptions`
+  | ***streams***: NestLoggersParamsStreams | Here you can configure `streams`, choosing to disable it if necessary and also provide your own transporter
+  | ***timestamp***: NestLoggerParamsPinoTimestamp | You can also configure how the timestamp will be formatted in the logs informing a template and a timezone, the template is created with the help of `dayjs` to assemble the desired string you can use the symbols informed here https://day.js.org/docs/en/display/format
 
-    - **NestLoggerParamsPrettyStream**<br/>
+    - **NestLoggersParamsPretty**<br/>
 
       | Param | Description 
       | :--- | :----:
-      | `disabled`: boolean | If you want to disable the `prettyStream` you can pass `false` in this option `(remembering that, as it will be disabled the 'options' will not have any effects)`
-      | `options`: pino.PrettyOptions | Here you can pass some options provided by `pin`, like `{colorize: true}`
+      | ***mode***: NestLoggerParamsLogggerMode | Here you can choose the mode that `prettyStream` will display the logs, the default value is `NestLoggerParamsLogggerMode.LOG_BUNDLE`, so the bundle will be logged.
+      | ***disabled***: boolean | If you want to disable the `prettyStream` you can pass `false` in this option `(remembering that, as it will be disabled the 'options' will not have any effects)`
+      | ***options***: pino.PrettyOptions | Here you can pass some options provided by `pin`, like `{colorize: true}`
+
+    - **NestLoggersParamsStreams**<br/>
+    
+      | Param | Description 
+      | :--- | :----:
+      | ***mode***: NestLoggerParamsLogggerMode | Here you can choose the mode that `streams` will display the logs, the default value is `NestLoggerParamsLogggerMode.LOG_BUNDLE`, so the bundle will be logged.
+      | ***pinoStreams***: pinoms.Streams | You can also tell which `streams` you want pinoms handles, you can find implementations of various transporters that can be used here https://github.com/pinojs/pino/blob/master/docs/transports.md#legacy
+
+    - **NestLoggerParamsLogggerMode**<br/>
+
+      There are two types of modes used in the `prettyPrint` and `streams` settings, they are:
+
+      | Enum | Description 
+      | :--- | :----:
+      | ***NestLoggerParamsLogggerMode.LOG_BUNDLE*** | Indicates that the log will be sent to the destination as a bundle `(this is the default behavior of all destinations)`
+      | ***NestLoggerParamsLogggerMode.LOG_LINE*** | Indicates that the log will be sent to the destination as log lines
 
     - **pinoms.Streams**<br/>
 
@@ -432,18 +456,18 @@ Below is the description of each parameter
 
       | Param | Description 
       | :--- | :----:
-      | `template`: string | To format the timezone your way, use a string that follows the pattern informed here [dayjs-formar](https://day.js.org/docs/en/display/format), eg: `'DD/MM/YYYY - HH:mm:ss.SSS'`
-      | `timezone`: string | Inform the timezone, you can find the valid timezones here [IANA database](https://www.iana.org/time-zones)
+      | ***template***: string | To format the timezone your way, use a string that follows the pattern informed here [dayjs-formar](https://day.js.org/docs/en/display/format), eg: `'DD/MM/YYYY - HH:mm:ss.SSS'`
+      | ***timezone***: string | Inform the timezone, you can find the valid timezones here [IANA database](https://www.iana.org/time-zones)
 
 
 
-- **NestLoggerParamsCustomPino**<br/>
+- **NestLoggersParamsCustom**<br/>
   But if you choose to use the default configuration in `NestLoggerParamsCustomPino`, using '`{ type: 'custom', ... }`' the options for these parameters will be provided
 
   | Param | Description 
   | :--- | :----:
-  | `type: 'custom'` | For the options to follow this pattern you must set the type to `'custom'`
-  | `logger`: pino.Logger | You can pass a logger that was configured your way
+  | ***type***: `'custom'` | For the options to follow this pattern you must set the type to `'custom'`
+  | ***logger***: pino.Logger | You can pass a logger that was configured your way
 
 
 ### Custom Filter and Interceptor

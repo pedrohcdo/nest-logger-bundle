@@ -17,7 +17,7 @@ export const LineLoggerProvider: Provider = {
 
 	useFactory: async (params: NestLoggerParams) => {
 		if(params?.loggers?.type === "custom")
-			return params.loggers.prettyLogger || pino({ enabled: false })
+			return params.loggers.lineLogger || pino({ enabled: false })
 		
 		// If this provider takes the responsibility of logging into prettyStream or streams, 
 		// then consequently the BundleLoggerProvider will not receive these responsibilities and may even be disabled.
