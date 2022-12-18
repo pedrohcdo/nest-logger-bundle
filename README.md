@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="" width="120" alt="Nest Logo" /></a>
+  <a href="http://nestjs.com/" target="blank"><img src="./logger-bundle.png" width="250" alt="Nest Logo" /></a>
 </p>
 
 [travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
