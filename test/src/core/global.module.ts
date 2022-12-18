@@ -67,7 +67,6 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 						},
 					},
 
-					// You can change this
 					contextBundle: {
 						strategy: {
 							onDispatch: NestLoggerDispatchStrategy.DISPATCH,
