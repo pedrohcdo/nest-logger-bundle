@@ -100,10 +100,10 @@ export class NestLoggerBundle {
 			context: Object.assign(
 				{
 					requestDuration: this.currentBranch.profiling(),
-					tags: Object.assign({}, this.bindings.tags)
+					tags: Object.assign({}, this.bindings.tags),
 				},
 				this.bindings.context
-			)
+			),
 		};
 		delete bindings.context.response;
 

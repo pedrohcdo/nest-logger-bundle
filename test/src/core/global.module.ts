@@ -49,7 +49,7 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 							disabled: false,
 							options: {
 								colorize: true,
-							}
+							},
 						},
 						streams: {
 							mode: NestLoggerParamsLogggerMode.LOG_BUNDLE,
@@ -57,7 +57,7 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 								{
 									stream: datadogStream,
 								},
-							]
+							],
 						},
 						timestamp: {
 							format: {
