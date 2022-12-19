@@ -608,7 +608,6 @@ export class SampleUserService {
 
 ```
 
-
 ## Stay in touch
 
 - Author - [Pedro Henrique C.](https://twitter.com/pedrohcdo)
