@@ -88,7 +88,7 @@ export class GlobalModule {}
 For the LoggerBundle to work correctly, it needs some points to be handled, for that there are two classes that are used to handle requests and errors, they are: `LoggerExceptionFilter` and `LoggerHttpInterceptor`.
 These classes need to be used in the global-scoped filters and interceptors like the example to be work across the whole application. `Remember to provide this filter and interceptor as in the example above in a global module or in the main module of your application.`
 
-> If you already have a global scope filter or interceptor, follow the [tutorial](#custom-filter-and-interceptor)
+> If you already have a global scope filter or interceptor on your project, follow the [tutorial](#custom-filter-and-interceptor)
 
 ### Injecting LoggerBundle
 
@@ -144,7 +144,12 @@ export class SampleUserService {
 
 > Remembering that the name of the current service can be acquired by `<Class>.name`, so you can change the name of the context of the LoggerBundle right at the beginning using as shown in the example above: `this.logService.setContextToken(SampleService.name)`
 
-If the `SampleUserService.createUser(email, username)` function is called, the log structure that will be generated will be like the example below:
+________________
+
+## Bundle Structure
+
+
+The bundle is generated at the end of a flow such as a request, after that the generated bundle is dispatched according to the parameters passed in the module configuration (`the complete configuration can be seen here `[Setting-up](#setting-up)). Para demonstrar como é a estrutura do bundle vamos usar o exemplo acima [Injecting LoggerBundle](#injecting-loggerbundle), if the `SampleUserService.createUser(email, username)` function is called, the bundle structure that will be generated will be like the example below:
 
 ```json
 {
@@ -200,17 +205,17 @@ If the `SampleUserService.createUser(email, username)` function is called, the l
 }
 ```
 
-The log will display 5 objects, they are:
+The bundle will contain these 5 objects
 
 | Object | Description 
 | :--- | :----:
-| ***logs*** | A bundle containing the entire `logs` tree including a time profiling between each log.
+| ***logs*** | A object containing the entire `logs` tree including a time profiling between each log.
 | ***context*** | The `context` in which this log bundle was created, containing information such as api path, method..
 | ***context.tags*** | The `tags` created in this context
 | ***req*** | The body of the `request` that originated this bundle
 | ***res*** | If it is a complete request context here you will be able to see the `response` of that request
 
-The generated bundle follows the following structure, where the `logs` array can contain more log nodes like the example
+The generated logs tree follows the following structure, where the `logs` array can contain more log nodes like the example
 
 ```ts
 {
@@ -259,10 +264,10 @@ There are some methods available for use in NestLoggerService, here is a list of
   fatal(...args)
   ```
 
-  Where all log levels follow the same argument model, there are thre call combinations, here is an example with `log()` level
+  Where all log levels follow the same argument model, there are three call combinations, here is an example with `log()` level
 
   ```ts
-  // The first way is sending a text that can contain special characters for formatting and then the arguments referring to the formatting.
+  // The first way is sending a text that can contain special characters of printf-like format for formatting (see https://github.com/pinojs/quick-format-unescaped), then the next arguments are the values ​​referring to the provided formatting..
   this.logService.log("message to format %d %d", 10, 20)
 
   // The second form precedes an object that will be merged together with the formatted message
@@ -320,7 +325,7 @@ ______
   })
   ```
 
-You must provide the desired parameters for the LoggerBundle, the parameters follow the following schema
+You must provide the desired parameters for the LoggerBundleModule, the parameters follow the following schema
 
 ```ts
 // default config
@@ -382,7 +387,7 @@ Below is the description of each parameter
 
   | Param | Description 
   | :--- | :----:
-  | ***loggers***: NestLoggerParamsPinoStream \| NestLoggerParamsCustomPino | The NestLoggerBundle uses the `pino-multi-stream ` to transport the logs to several different destinations at the same time, for that it is necessary to use the `type: 'default'` so some parameters of `NestLoggersParamsStream` will be provided, but if you choose to use a `type: 'custom'` some parameters of `NestLoggersParamsCustom` will be provided and you can use a pin logger configured in your own way.
+  | ***loggers***: NestLoggerParamsPinoStream \| NestLoggerParamsCustomPino | The NestLoggerBundle uses the `pino-multi-stream ` to transport the logs to several different destinations at the same time, if you want to use the default implementation that makes managing these logs very easy use type `'default'` so some parameters of `NestLoggersParamsStream` will be provided, but if you choose to use a type `'custom'` some parameters of `NestLoggersParamsCustom` will be provided and you can use a `pino` logger configured in your own way.
   |  ***contextBundle***: NestLoggerParamsContextBundle | Here you can configure some behaviors related to how the bundle is created, for example, configure what the bundle's marjoritary level will be..
 
 - **NestLoggersParamsStream**<br/>
@@ -394,8 +399,10 @@ Below is the description of each parameter
   | ***type***: `'default'` | For the options to follow this pattern you must set the type to `'default'`
   | ***prettyPrint***: NestLoggersParamsPretty | Here you can configure `prettyStream`, choosing to disable it if necessary and also provide your `pin.PrettyOptions`
   | ***streams***: NestLoggersParamsStreams | Here you can configure `streams`, choosing to disable it if necessary and also provide your own transporter
-  | ***timestamp***: NestLoggerParamsPinoTimestamp | You can also configure how the timestamp will be formatted in the logs informing a template and a timezone, the template is created with the help of `dayjs` to assemble the desired string you can use the symbols informed here https://day.js.org/docs/en/display/format
+  | ***timestamp***: NestLoggerParamsPinoTimestamp | You can also configure how the timestamp will be formatted in the logs informing a template and a timezone, the template is created with the help of `dayjs` to assemble the desired string you can use the symbols informed here [Day.js](https://day.js.org/docs/en/display/format)
 
+  ###  Related Params
+    
     - **NestLoggersParamsPretty**<br/>
 
       | Param | Description 
@@ -422,36 +429,7 @@ Below is the description of each parameter
 
     - **pinoms.Streams**<br/>
 
-      Here is an example of how to use a transport `(In this example, datadog is used)`
-      > To find more transporters, have a look at the pino repository in this section [Legacy](https://github.com/pinojs/pino/blob/master/docs/transports.md#legacy)
-
-      ```ts
-        import datadog from 'pino-datadog';
-
-        // ... 
-        NestLoggerModule.forRootAsync({
-          useFactory: async (config: ConfigService): Promise<NestLoggerParams> => {
-            const datadogStream = await datadog.createWriteStream({
-              apiKey: config.get('datadog.apiKey'),
-              service: config.get('datadog.serviceName'),
-            });
-
-            return {
-              // ...
-              pinoStream: {
-                type: 'default',
-                streams: [
-                  {
-                    stream: datadogStream,
-                  },
-                ],
-              },
-            };
-          },
-          inject: [ConfigService],
-        }),
-
-      ```
+      Here you can set some streams to transport your logs, check these examples of how to use [Streams](#streams)
 
     - **NestLoggerParamsPinoTimestamp**<br/>
 
@@ -470,8 +448,57 @@ Below is the description of each parameter
   | ***type***: `'custom'` | For the options to follow this pattern you must set the type to `'custom'`
   | ***logger***: pino.Logger | You can pass a logger that was configured your way
 
+- **NestLoggerParamsContextBundle**<br/>
+  Here you can configure bundle-related behaviors, such as the `strategy` used to dispatch the bundle to the loggers
+
+  | Param | Description 
+  | :--- | :----:
+  | ***strategy***: NestLoggerParamsContextBundleStrategy | Strategy used to dispatch the bundle to the loggers
+
+  ###  Related Params
+
+  - **NestLoggerParamsContextBundleStrategy**<br/>
+  Below are the settings available for these strategies
+
+    | Param | Description 
+    | :--- | :----:
+    | ***level***: NestLoggerLevelStrategy | This strategy defines what will be the main level of the bundle, as the bundle will contain a tree of logs, it can contain several logs with several levels, so to define the main level, the configuration provided here is used to decide the best level, the default strategy is `NestLoggerLevelStrategy.MAJOR_LEVEL`
+    | ***onDispatch***: NestLoggerDispatchStrategy | At the end of a flow, such as a request, depending on the rule provided here the generated bundle will be dispatched or not to the loggers, the main rule is `NestLoggerDispatchStrategy.DISPATCH`
+    | ***onError***: NestLoggerOnErrorStrategy | When an error occurs in the application, the bundle generated until that moment will be dispatched or not depending on the rule provided here, the main rule is `NestLoggerOnErrorStrategy.DISPATCH`
+
 ### Streams
 
+Probably at some point you may need to transport your logs, for example to some
+observability service in the cloud, here is an example of how to configure this using the `streams` parameter to send the logs to Datadog service `(In this example, datadog transporter is used)`
+> To find more transporters and how to install their dependencies, have a look at the pino repository in this section [Legacy](https://github.com/pinojs/pino/blob/master/docs/transports.md#legacy)
+
+```ts
+  import datadog from 'pino-datadog';
+
+  // ... 
+  NestLoggerModule.forRootAsync({
+    useFactory: async (config: ConfigService): Promise<NestLoggerParams> => {
+      const datadogStream = await datadog.createWriteStream({
+        apiKey: config.get('datadog.apiKey'),
+        service: config.get('datadog.serviceName'),
+      });
+
+      return {
+        // ...
+        pinoStream: {
+          type: 'default',
+          streams: [
+            {
+              stream: datadogStream,
+            },
+          ],
+        },
+      };
+    },
+    inject: [ConfigService],
+  }),
+
+```
 
 ### Custom Filter and Interceptor
 
