@@ -383,8 +383,9 @@ Below is the description of each parameter
 
   | Param | Description 
   | :--- | :----:
-  | ***loggers***: NestLoggerParamsPinoStream \| NestLoggerParamsCustomPino | The NestLoggerBundle uses the `pino-multi-stream ` to transport the logs to several different destinations at the same time, if you want to use the default implementation that makes managing these logs very easy use type `'default'` so some parameters of `NestLoggersParamsStream` will be provided, but if you choose to use a type `'custom'` some parameters of `NestLoggersParamsCustom` will be provided and you can use a `pino` logger configured in your own way.
-  |  ***contextBundle***: NestLoggerParamsContextBundle | Here you can configure some behaviors related to how the bundle is created, for example, configure what the bundle's marjoritary level will be..
+  | ***loggers***?: NestLoggerParamsPinoStream \| NestLoggerParamsCustomPino | The NestLoggerBundle uses the `pino-multi-stream ` to transport the logs to several different destinations at the same time, if you want to use the default implementation that makes managing these logs very easy use type `'default'` so some parameters of `NestLoggersParamsStream` will be provided, but if you choose to use a type `'custom'` some parameters of `NestLoggersParamsCustom` will be provided and you can use a `pino` logger configured in your own way.
+  |  ***contextBundle***?: NestLoggerParamsContextBundle | Here you can configure some behaviors related to how the bundle is created, for example, configure what the bundle's marjoritary level will be..
+  |  ***forRoutes***?: (string \| Type<any> \| RouteInfo)[] | Pattern based routes are supported as well. For instance, the asterisk is used as a wildcard, and will match any combination of characters, for more datails see [NestJS-Middlewares](https://docs.nestjs.com/middleware), the default is `[{ path: '*', method: RequestMethod.ALL }]`
 
 - **NestLoggersParamsStream**<br/>
   If you choose to use the default configuration in `NestLoggerParams`, using '`{ type: 'default', ... }`' the options for these parameters will be provided
@@ -393,9 +394,9 @@ Below is the description of each parameter
   | Param | Description 
   | :--- | :----:
   | ***type***: `'default'` | For the options to follow this pattern you must set the type to `'default'`
-  | ***prettyPrint***: NestLoggersParamsPretty | Here you can configure `prettyStream`, choosing to disable it if necessary and also provide your `pin.PrettyOptions`
-  | ***streams***: NestLoggersParamsStreams | Here you can configure `streams`, choosing to disable it if necessary and also provide your own transporter
-  | ***timestamp***: NestLoggerParamsPinoTimestamp | You can also configure how the timestamp will be formatted in the logs informing a template and a timezone, the template is created with the help of `dayjs` to assemble the desired string you can use the symbols informed here [Day.js](https://day.js.org/docs/en/display/format)
+  | ***prettyPrint***?: NestLoggersParamsPretty | Here you can configure `prettyStream`, choosing to disable it if necessary and also provide your `pin.PrettyOptions`
+  | ***streams***?: NestLoggersParamsStreams | Here you can configure `streams`, choosing to disable it if necessary and also provide your own transporter
+  | ***timestamp***?: NestLoggerParamsPinoTimestamp | You can also configure how the timestamp will be formatted in the logs informing a template and a timezone, the template is created with the help of `dayjs` to assemble the desired string you can use the symbols informed here [Day.js](https://day.js.org/docs/en/display/format)
 
   ###  Related Params
     
@@ -403,16 +404,16 @@ Below is the description of each parameter
 
       | Param | Description 
       | :--- | :----:
-      | ***mode***: NestLoggerParamsLogggerMode | Here you can choose the mode that `prettyStream` will display the logs, the default value is `NestLoggerParamsLogggerMode.LOG_BUNDLE`, so the bundle will be logged.
-      | ***disabled***: boolean | If you want to disable the `prettyStream` you can pass `false` in this option `(remembering that, as it will be disabled the 'options' will not have any effects)`
-      | ***options***: pino.PrettyOptions | Here you can pass some options provided by `pin`, like `{colorize: true}`
+      | ***mode***?: NestLoggerParamsLogggerMode | Here you can choose the mode that `prettyStream` will display the logs, the default value is `NestLoggerParamsLogggerMode.LOG_BUNDLE`, so the bundle will be logged.
+      | ***disabled***?: boolean | If you want to disable the `prettyStream` you can pass `false` in this option `(remembering that, as it will be disabled the 'options' will not have any effects)`
+      | ***options***?: pino.PrettyOptions | Here you can pass some options provided by `pin`, like `{colorize: true}`
 
     - **NestLoggersParamsStreams**<br/>
     
       | Param | Description 
       | :--- | :----:
-      | ***mode***: NestLoggerParamsLogggerMode | Here you can choose the mode that `streams` will display the logs, the default value is `NestLoggerParamsLogggerMode.LOG_BUNDLE`, so the bundle will be logged.
-      | ***pinoStreams***: pinoms.Streams | You can also tell which `streams` you want pinoms handles, you can find implementations of various transporters that can be used here https://github.com/pinojs/pino/blob/master/docs/transports.md#legacy
+      | ***mode***?: NestLoggerParamsLogggerMode | Here you can choose the mode that `streams` will display the logs, the default value is `NestLoggerParamsLogggerMode.LOG_BUNDLE`, so the bundle will be logged.
+      | ***pinoStreams***?: pinoms.Streams | You can also tell which `streams` you want pinoms handles, you can find implementations of various transporters that can be used here https://github.com/pinojs/pino/blob/master/docs/transports.md#legacy
 
     - **NestLoggerParamsLogggerMode**<br/>
 
@@ -442,14 +443,15 @@ Below is the description of each parameter
   | Param | Description 
   | :--- | :----:
   | ***type***: `'custom'` | For the options to follow this pattern you must set the type to `'custom'`
-  | ***logger***: pino.Logger | You can pass a logger that was configured your way
+  | ***bundleLogger***: pino.Logger | This logger will be used to log bundles only
+  | ***lineLogger***?: pino.Logger | This logger will be used to log only line logs (which are common logs)
 
 - **NestLoggerParamsContextBundle**<br/>
   Here you can configure bundle-related behaviors, such as the `strategy` used to dispatch the bundle to the loggers
 
   | Param | Description 
   | :--- | :----:
-  | ***strategy***: NestLoggerParamsContextBundleStrategy | Strategy used to dispatch the bundle to the loggers
+  | ***strategy***?: NestLoggerParamsContextBundleStrategy | Strategy used to dispatch the bundle to the loggers
 
   ###  Related Params
 
@@ -458,7 +460,7 @@ Below is the description of each parameter
 
     | Param | Description 
     | :--- | :----:
-    | ***level***: NestLoggerLevelStrategy | This strategy defines what will be the main level of the bundle, as the bundle will contain a tree of logs, it can contain several logs with several levels, so to define the main level, the configuration provided here is used to decide the best level, the default strategy is `NestLoggerLevelStrategy.MAJOR_LEVEL`
+    | ***level***?: NestLoggerLevelStrategy | This strategy defines what will be the main level of the bundle, as the bundle will contain a tree of logs, it can contain several logs with several levels, so to define the main level, the configuration provided here is used to decide the best level, the default strategy is `NestLoggerLevelStrategy.MAJOR_LEVEL`
 
 ### Streams
 

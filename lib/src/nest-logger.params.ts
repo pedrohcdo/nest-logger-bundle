@@ -1,3 +1,4 @@
+import { RouteInfo, Type } from '@nestjs/common/interfaces'
 import pino from 'pino'
 import pinoms from 'pino-multi-stream'
 import { PinoLevels } from './bundle/context/logger.definitions'
@@ -78,4 +79,5 @@ export interface NestLoggerParamsContextBundle {
 export interface NestLoggerParams {
 	loggers?: NestLoggersParamsStream | NestLoggersParamsCustom
 	contextBundle?: NestLoggerParamsContextBundle
+	forRoutes?: (string | Type<any> | RouteInfo)[]
 }

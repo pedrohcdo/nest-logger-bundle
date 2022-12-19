@@ -12,8 +12,8 @@ import { NestLoggerHookMiddleware } from './core'
 import { BundleLoggerProvider } from './core/providers/bundle-logger.provider'
 import { LineLoggerProvider } from './core/providers/pretty-logger.provider'
 import { InternalLoggerService, NestLoggerService } from './logger'
-import { ConfigurableModuleClass } from './nest-logger.module-definition'
-import { BUNDLE_LOGGER_PROVIDER_TOKEN } from './nest-logger.params'
+import { ConfigurableModuleClass, MODULE_OPTIONS_TOKEN } from './nest-logger.module-definition'
+import { BUNDLE_LOGGER_PROVIDER_TOKEN, NestLoggerParams } from './nest-logger.params'
 
 @Module({
 	providers: [
@@ -35,6 +35,7 @@ import { BUNDLE_LOGGER_PROVIDER_TOKEN } from './nest-logger.params'
 })
 export class NestLoggerModule extends ConfigurableModuleClass implements NestModule {
 	constructor(
+		@Inject(MODULE_OPTIONS_TOKEN) private params: NestLoggerParams,
 		@Inject(BUNDLE_LOGGER_PROVIDER_TOKEN) private bundleLogger: pino.Logger,
 	) {
 		super()
@@ -49,7 +50,9 @@ export class NestLoggerModule extends ConfigurableModuleClass implements NestMod
 			},
 			logger: this.bundleLogger,
 		})
+		
+		const routes = this.params.forRoutes || [{ path: '*', method: RequestMethod.ALL }];
 
-		consumer.apply(middleware, NestLoggerHookMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL })
+		consumer.apply(middleware, NestLoggerHookMiddleware).forRoutes(...routes)
 	}
 }
