@@ -145,6 +145,32 @@ export class SampleUserService {
 
 > Remembering that the name of the current service can be acquired by `<Class>.name`, so you can change the name of the context of the LoggerBundle right at the beginning using as shown in the example above: `this.logService.setContextToken(SampleService.name)`
 
+### Sets custom logger service
+
+In order for the nest to use the LoggerBundle as the main logger, you will have to configure it as shown below, so that all internal logs that occur in the Nest (`like startup ones`) will be forwarded to the LoggerBundle.<br/>
+In your Nest startup file (`usually main.ts`), do the following
+
+```ts
+// ...
+import { InternalLoggerService } from 'nest-logger-bundle'
+
+async function bootstrap() {
+	const app = await NestFactory.create(AppModule, {
+		bufferLogs: true
+	})
+
+	//
+	const logger = app.get(InternalLoggerService);
+	app.useLogger(logger);
+
+	// ...
+	await app.listen(port)
+}
+
+bootstrap()
+```
+> It's important to pass the `{ bufferLogs: true }` flag, to make it work correctly
+
 ________________
 
 ## Bundle Structure
