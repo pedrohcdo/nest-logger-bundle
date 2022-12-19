@@ -10,19 +10,15 @@ export const resolveLoggerFor = async (params: NestLoggerParams, designatedMode:
     
     // Default is LOG_BUNDLE
     if(!loggers?.prettyPrint?.disabled && (loggers?.prettyPrint?.mode || NestLoggerParamsLogggerMode.LOG_BUNDLE) === designatedMode) {
-        console.log("C")
         const prettyStream = pinoms.prettyStream({
             prettyPrint: loggers?.prettyPrint?.options || {}
         })
-        console.log("D")
         streams.push({ 
             stream: prettyStream,
         })
-        console.log("E")
     }
     // Default is LOG_BUNDLE
     if(loggers?.streams && !loggers?.streams?.disabled && (loggers?.streams?.mode || NestLoggerParamsLogggerMode.LOG_BUNDLE) === designatedMode) {
-        console.log("G")
         streams.push(...loggers?.streams.pinoStreams)
     }
     if(streams.length > 0) {
@@ -47,6 +43,5 @@ export const resolveLoggerFor = async (params: NestLoggerParams, designatedMode:
 
     
     }
-    console.log("J")
     return pino({ enabled: false });
 }

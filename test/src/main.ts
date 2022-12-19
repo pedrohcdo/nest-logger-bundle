@@ -12,7 +12,6 @@ async function bootstrap() {
 	const port = configService.get('PORT')
 
 	//
-	console.log("U")
 	const logger = app.get(InternalLoggerService);
 	app.useLogger(logger);
 
