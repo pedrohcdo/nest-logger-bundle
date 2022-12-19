@@ -384,7 +384,7 @@ Below is the description of each parameter
 
   | Param | Description 
   | :--- | :----:
-  | ***loggers***?: NestLoggerParamsPinoStream \| NestLoggerParamsCustomPino | The NestLoggerBundle uses the `pino-multi-stream ` to transport the logs to several different destinations at the same time, if you want to use the default implementation that makes managing these logs very easy use type `'default'` so some parameters of `LoggerBundleParamsStream` will be provided, but if you choose to use a type `'custom'` some parameters of `LoggerBundleParamsCustom` will be provided and you can use a `pino` logger configured in your own way.
+  | ***loggers***?: LoggerBundleParamsStream \| LoggerBundleParamsCustom | The LoggerBundle uses the `pino-multi-stream ` to transport the logs to several different destinations at the same time, if you want to use the default implementation that makes managing these logs very easy use type `'default'` so some parameters of `LoggerBundleParamsStream` will be provided, but if you choose to use a type `'custom'` some parameters of `LoggerBundleParamsCustom` will be provided and you can use a `pino` logger configured in your own way.
   |  ***contextBundle***?: LoggerBundleParamsContextBundle | Here you can configure some behaviors related to how the bundle is created, for example, configure what the bundle's marjoritary level will be..
   |  ***forRoutes***?: (string \| Type<any> \| RouteInfo)[] | Pattern based routes are supported as well. For instance, the asterisk is used as a wildcard, and will match any combination of characters, for more datails see [NestJS-Middlewares](https://docs.nestjs.com/middleware), the default is `[{ path: '*', method: RequestMethod.ALL }]`
 
@@ -436,7 +436,7 @@ Below is the description of each parameter
       | ***disabled***: boolean | If necessary, you can also disable the timestamp.
       | ***format***: LoggerBundleParamsPinoTimestampFormat | You can also configure how the timestamp will be formatted in the logs informing a template and a timezone, the template is created with the help of `dayjs` to assemble the desired string you can use the symbols informed here [Day.js](https://day.js.org/docs/en/display/format)
 
-    - **NestLoggerParamsPinoTimestamp**<br/>
+    - **LoggerBundleParamsPinoTimestampFormat**<br/>
 
       | Param | Description 
       | :--- | :----:
@@ -446,7 +446,7 @@ Below is the description of each parameter
 
 
 - **LoggerBundleParamsCustom**<br/>
-  But if you choose to use the default configuration in `NestLoggerParamsCustomPino`, using '`{ type: 'custom', ... }`' the options for these parameters will be provided
+  But if you choose to use the custom configuration in `LoggerBundleParams`, using '`{ type: 'custom', ... }`' the options for these parameters will be provided
 
   | Param | Description 
   | :--- | :----:
