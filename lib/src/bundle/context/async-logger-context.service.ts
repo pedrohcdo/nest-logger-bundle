@@ -4,16 +4,16 @@ import pino from 'pino';
 import { MODULE_OPTIONS_TOKEN } from '../../nest-logger.module-definition';
 import {
 	BUNDLE_LOGGER_PROVIDER_TOKEN,
-	NestLoggerParams
+	LoggerBundleParams
 } from '../../nest-logger.params';
 import { NestLoggerBundle } from '../logger-bundle.service';
-import { NestLoggerStorage } from './async-logger.hook';
+import { BundleLoggerStorage } from './async-logger.hook';
 
 /**
  *  This asynchronous context handles bundles using 'NestLoggerStorage' which in turn uses 'AsyncLocalStorage'.
  */
 @Injectable({})
-export class NestAsyncLoggerContext {
+export class BundleAsyncLoggerContext {
 
 	private detachedContext: {
 		logger: pino.Logger;
@@ -22,7 +22,7 @@ export class NestAsyncLoggerContext {
 	};
 
 	constructor(
-		@Inject(MODULE_OPTIONS_TOKEN) private params: NestLoggerParams,
+		@Inject(MODULE_OPTIONS_TOKEN) private params: LoggerBundleParams,
 		@Inject(BUNDLE_LOGGER_PROVIDER_TOKEN) private bundleLogger: pino.Logger,
 		private moduleRef: ModuleRef
 	) {}
@@ -34,7 +34,7 @@ export class NestAsyncLoggerContext {
 			return null;
 		}
 
-		const fromStore = NestLoggerStorage.getStore();
+		const fromStore = BundleLoggerStorage.getStore();
 
 		return {
 			logger: fromStore.logger,
@@ -67,15 +67,15 @@ export class NestAsyncLoggerContext {
 	}
 
 	hasContext() {
-		return !!NestLoggerStorage.getStore();
+		return !!BundleLoggerStorage.getStore();
 	}
 
 	/**
 	 * Creates a new detached context which in turn no longer uses 'NestLoggerStorage', 
 	 * this detached context is created with a fixed bundle because it loses the ability to work asynchronously.
 	 */
-	async createDetachedContext(): Promise<NestAsyncLoggerContext> {
-		const context = await this.moduleRef.create(NestAsyncLoggerContext);
+	async createDetachedContext(): Promise<BundleAsyncLoggerContext> {
+		const context = await this.moduleRef.create(BundleAsyncLoggerContext);
 		const detachedLoggerBundle = await this.moduleRef.create(NestLoggerBundle);
 
 		let getFrom: {

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { TestUtils } from 'test-utils';
-import { NestLoggerModule } from './nest-logger.module'
+import { LoggerBundleModule } from './nest-logger.module'
 
 
 xdescribe('AppController', () => {
@@ -10,7 +10,7 @@ xdescribe('AppController', () => {
 	beforeEach(async () => {
 		// Pra realizar o teste do "SimpleAppController" é necessario que o nest crie a arvore de dependencia do "SimpleAppModule".
 		// O metodo utilitario abaixo cria o modulo de teste utilizando como raiz o "SimpleAppModule".
-		module = await TestUtils.createTestingModule([NestLoggerModule])
+		module = await TestUtils.createTestingModule([LoggerBundleModule])
 	})
 
 	describe('creating NestLoggerModule', () => {

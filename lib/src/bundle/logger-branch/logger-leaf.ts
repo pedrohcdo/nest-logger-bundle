@@ -1,4 +1,4 @@
-import { NestLoggerLevelStrategy } from "../../nest-logger.params";
+import { LoggerBundleLevelStrategy } from "../../nest-logger.params";
 import pino from "pino";
 import { LoggerFunction, PinoLevels } from "../context/logger.definitions";
 import { LoggerBranchUtils } from "./branch.utils";
@@ -15,7 +15,7 @@ export class LoggerLeaf implements LoggerNode {
 		};
 	}
 
-	introspectLevel(_: NestLoggerLevelStrategy, defaultLevel: PinoLevels = 'info'): PinoLevels {
+	introspectLevel(_: LoggerBundleLevelStrategy, defaultLevel: PinoLevels = 'info'): PinoLevels {
 		if (!this.level) return defaultLevel;
 		return this.level;
 	}

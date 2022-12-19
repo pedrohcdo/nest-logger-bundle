@@ -1,6 +1,6 @@
-import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
-import { NestAsyncLoggerContext } from '../../bundle/context/async-logger-context.service';
+import { BundleAsyncLoggerContext } from '../../bundle/context/async-logger-context.service';
 import { Response } from 'express';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 @Injectable()
 export class LoggerHttpInterceptor implements NestInterceptor {
 
-    constructor(private loggerContext: NestAsyncLoggerContext) {}
+    constructor(private loggerContext: BundleAsyncLoggerContext) {}
 
     private dispatchLogger(context: ExecutionContext, responseData: any) {
         const httpContext: HttpArgumentsHost = context.switchToHttp();

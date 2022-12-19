@@ -2,7 +2,7 @@ import pino from "pino";
 import { LoggerFunction, PinoLevels } from "../context/logger.definitions";
 import { LoggerLeaf } from "./logger-leaf";
 import { LoggerNode } from "./logger-node";
-import { NestLoggerLevelStrategy } from '../../nest-logger.params';
+import { LoggerBundleLevelStrategy } from '../../nest-logger.params';
 
 export class LoggerBranch implements LoggerNode {
 	createdAt: number = Date.now();
@@ -37,7 +37,7 @@ export class LoggerBranch implements LoggerNode {
 		return this.exitedAt - this.createdAt;
 	}
 
-	introspectLevel(strategy: NestLoggerLevelStrategy = NestLoggerLevelStrategy.MAJOR_LEVEL, defaultLevel: PinoLevels = 'info'): PinoLevels {
+	introspectLevel(strategy: LoggerBundleLevelStrategy = LoggerBundleLevelStrategy.MAJOR_LEVEL, defaultLevel: PinoLevels = 'info'): PinoLevels {
 		let currentLevel: PinoLevels = null;
 		for (const branch of this.branchs) {
 			const cLevel = branch.introspectLevel(strategy, defaultLevel);
@@ -46,16 +46,16 @@ export class LoggerBranch implements LoggerNode {
 			} else {
 				const lv1 = pino.levels.values[currentLevel];
 				const lv2 = pino.levels.values[cLevel];
-				switch (strategy as NestLoggerLevelStrategy) {
+				switch (strategy as LoggerBundleLevelStrategy) {
 					default:
-					case NestLoggerLevelStrategy.LAST_LEVEL:
+					case LoggerBundleLevelStrategy.LAST_LEVEL:
 						currentLevel = cLevel;
 						break;
-					case NestLoggerLevelStrategy.MINOR_LEVEL: {
+					case LoggerBundleLevelStrategy.MINOR_LEVEL: {
 						currentLevel = pino.levels.labels[Math.min(lv1, lv2)] as PinoLevels;
 						break;
 					}
-					case NestLoggerLevelStrategy.MAJOR_LEVEL:
+					case LoggerBundleLevelStrategy.MAJOR_LEVEL:
 						currentLevel = pino.levels.labels[Math.max(lv1, lv2)] as PinoLevels;
 						break;
 				}

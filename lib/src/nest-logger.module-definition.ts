@@ -1,12 +1,12 @@
 import { ConfigurableModuleBuilder } from '@nestjs/common'
-import { NestLoggerParams } from './nest-logger.params'
+import { LoggerBundleParams } from './nest-logger.params'
 
 interface ConfigurableModuleExtras {
 
 	isGlobal?: boolean
 }
 
-const { ConfigurableModuleClass, MODULE_OPTIONS_TOKEN } = new ConfigurableModuleBuilder<NestLoggerParams>()
+const { ConfigurableModuleClass, MODULE_OPTIONS_TOKEN } = new ConfigurableModuleBuilder<LoggerBundleParams>()
 	.setClassMethodName('forRoot')
 	.setExtras(
 		{} as ConfigurableModuleExtras,

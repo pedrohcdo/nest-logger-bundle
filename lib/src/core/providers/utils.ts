@@ -1,15 +1,15 @@
 import dayjs from "dayjs";
 import pino from "pino";
 import pinoms from "pino-multi-stream";
-import { NestLoggerParams, NestLoggerParamsLogggerMode, NestLoggersParamsStream } from "../../nest-logger.params";
+import { LoggerBundleParams, LoggerBundleParamsLogggerMode, LoggerBundleParamsStream } from "../../nest-logger.params";
 
-export const resolveLoggerFor = async (params: NestLoggerParams, designatedMode: NestLoggerParamsLogggerMode) => {
-    const loggers = params?.loggers as NestLoggersParamsStream
+export const resolveLoggerFor = async (params: LoggerBundleParams, designatedMode: LoggerBundleParamsLogggerMode) => {
+    const loggers = params?.loggers as LoggerBundleParamsStream
 
     let streams = [];
     
     // Default is LOG_BUNDLE
-    if(!loggers?.prettyPrint?.disabled && (loggers?.prettyPrint?.mode || NestLoggerParamsLogggerMode.LOG_BUNDLE) === designatedMode) {
+    if(!loggers?.prettyPrint?.disabled && (loggers?.prettyPrint?.mode || LoggerBundleParamsLogggerMode.LOG_BUNDLE) === designatedMode) {
         const prettyStream = pinoms.prettyStream({
             prettyPrint: loggers?.prettyPrint?.options || {}
         })
@@ -18,7 +18,7 @@ export const resolveLoggerFor = async (params: NestLoggerParams, designatedMode:
         })
     }
     // Default is LOG_BUNDLE
-    if(loggers?.streams && !loggers?.streams?.disabled && (loggers?.streams?.mode || NestLoggerParamsLogggerMode.LOG_BUNDLE) === designatedMode) {
+    if(loggers?.streams && !loggers?.streams?.disabled && (loggers?.streams?.mode || LoggerBundleParamsLogggerMode.LOG_BUNDLE) === designatedMode) {
         streams.push(...loggers?.streams.pinoStreams)
     }
     if(streams.length > 0) {

@@ -6,7 +6,7 @@ import { PinoLevels } from './bundle/context/logger.definitions'
 export const BUNDLE_LOGGER_PROVIDER_TOKEN = 'BUNDLE_LOGGER_PROVIDER_TOKEN'
 export const LINE_LOGGER_PROVIDER_TOKEN = 'LINE_LOGGER_PROVIDER_TOKEN'
 
-export enum NestLoggerLevelStrategy {
+export enum LoggerBundleLevelStrategy {
 	MINOR_LEVEL = 0,
 	MAJOR_LEVEL = 1,
 	LAST_LEVEL = 2,
@@ -14,15 +14,15 @@ export enum NestLoggerLevelStrategy {
 
 export interface LoggerModuleAsyncParams {
 
-	useFactory: (...args: any[]) => NestLoggerParams | Promise<NestLoggerParams>
+	useFactory: (...args: any[]) => LoggerBundleParams | Promise<LoggerBundleParams>
 	inject?: any[]
 }
 
-export interface NestLoggerParamsContextBundleStrategy {
-	level?: NestLoggerLevelStrategy
+export interface LoggerBundleParamsContextBundleStrategy {
+	level?: LoggerBundleLevelStrategy
 }
 
-export enum NestLoggerParamsLogggerMode {
+export enum LoggerBundleParamsLogggerMode {
 
 	LOG_BUNDLE = 1,
 
@@ -30,53 +30,53 @@ export enum NestLoggerParamsLogggerMode {
 }
 
 
-export interface NestLoggersParamsPretty {
+export interface LoggerBundleParamsPretty {
 
 	disabled?: boolean
 	options?: pino.PrettyOptions
-	mode?: NestLoggerParamsLogggerMode
+	mode?: LoggerBundleParamsLogggerMode
 }
 
-export interface NestLoggerParamsPinoTimestampFormat {
+export interface LoggerBundleParamsPinoTimestampFormat {
 
 	template: string
 	timezone: string
 }
 
-export interface NestLoggersParamsTimestamp {
+export interface LoggerBundleParamsTimestamp {
 
 	disabled?: boolean,
-	format?: NestLoggerParamsPinoTimestampFormat
+	format?: LoggerBundleParamsPinoTimestampFormat
 }
 
-export interface NestLoggersParamsStreams {
+export interface LoggerBundleParamsStreams {
 
 	disabled?: boolean
 	pinoStreams?: pinoms.Streams
-	mode?: NestLoggerParamsLogggerMode
+	mode?: LoggerBundleParamsLogggerMode
 }
 
 
-export interface NestLoggersParamsCustom {
+export interface LoggerBundleParamsCustom {
 	type: "custom"
 	bundleLogger: pino.Logger
 	lineLogger?: pino.Logger
 }
 
-export interface NestLoggersParamsStream {
+export interface LoggerBundleParamsStream {
 	type: "default"
-	prettyPrint?: NestLoggersParamsPretty
-	streams?: NestLoggersParamsStreams
-	timestamp?: NestLoggersParamsTimestamp
+	prettyPrint?: LoggerBundleParamsPretty
+	streams?: LoggerBundleParamsStreams
+	timestamp?: LoggerBundleParamsTimestamp
 }
 
-export interface NestLoggerParamsContextBundle {
+export interface LoggerBundleParamsContextBundle {
 	defaultLevel?: PinoLevels
-	strategy?: NestLoggerParamsContextBundleStrategy
+	strategy?: LoggerBundleParamsContextBundleStrategy
 }
 
-export interface NestLoggerParams {
-	loggers?: NestLoggersParamsStream | NestLoggersParamsCustom
-	contextBundle?: NestLoggerParamsContextBundle
+export interface LoggerBundleParams {
+	loggers?: LoggerBundleParamsStream | LoggerBundleParamsCustom
+	contextBundle?: LoggerBundleParamsContextBundle
 	forRoutes?: (string | Type<any> | RouteInfo)[]
 }

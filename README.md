@@ -49,13 +49,13 @@ ________________
 
 ## How to use
 
-First we need to import the NestLoggerModule module in the module we want to use. Follow the minimum configuration:
+First we need to import the LoggerBundleModule module in the module we want to use. Follow the minimum configuration:
 
 ```ts
 import { Global, Module } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import {
-  NestLoggerModule,
+  LoggerBundleModule,
   LoggerExceptionFilter,
   LoggerHttpInterceptor
 } from 'nest-logger-bundle';
@@ -67,7 +67,7 @@ import {
   imports: [
     // .. imports
 
-   NestLoggerModule.forRoot({})
+   LoggerBundleModule.forRoot({})
   ],
 
   providers: [
@@ -81,7 +81,7 @@ import {
     },
   ],
 
-  exports: [NestLoggerModule /**, ... others exports */],
+  exports: [LoggerBundleModule /**, ... others exports */],
 })
 export class GlobalModule {}
 
@@ -100,7 +100,7 @@ To inject the Logger in some injectable service of your project follow the examp
 export class SampleUserService {
 
   constructor(
-    private logService: NestLoggerService
+    private logService: LoggerBundleService
   ) {
     this.logService.setContextToken(SampleService.name)
   }
@@ -242,7 +242,7 @@ The generated logs tree follows the following structure, where the `logs` array 
 }
 ```
 
-There are some methods available for use in NestLoggerService, here is a list of them
+There are some methods available for use in LoggerBundleService, here is a list of them
 
 - Log Methods <br/>
   ```ts
@@ -300,13 +300,13 @@ ______
 
 ## Setting-up
 
-  The NestLoggerModule provides two ways of configuration, they are:
+  The LoggerBundleModule provides two ways of configuration, they are:
 
 - *Statically Config*<br/>
   If you want to configure it statically, just use
   
   ```ts
-  NestLoggerModule.forRoot({
+  LoggerBundleModule.forRoot({
     // ... params
   })
   ```
@@ -315,9 +315,9 @@ ______
   In case you want to pass the settings asynchronously
   
   ```ts
-  NestLoggerModule.forRootAsync({
+  LoggerBundleModule.forRootAsync({
     isGlobal: boolean, // 
-    useFactory: (config: ConfigService): NestLoggerParams => {
+    useFactory: (config: ConfigService): LoggerBundleParams => {
       return {
         // ... params
       }
@@ -334,12 +334,12 @@ You must provide the desired parameters for the LoggerBundleModule, the paramete
   loggers: {
     type: 'default',
     prettyPrint: {
-      mode: NestLoggerParamsLogggerMode, // DEFAULT IS LOG_BUNDLE
+      mode: LoggerBundleParamsLogggerMode, // DEFAULT IS LOG_BUNDLE
       disabled: boolean,
       options: pino.PrettyOptions,
     },
     streams: {
-      mode: NestLoggerParamsLogggerMode, // DEFAULT IS LOG_BUNDLE
+      mode: LoggerBundleParamsLogggerMode, // DEFAULT IS LOG_BUNDLE
       pinoStreams: pinoms.Streams
     },
     timestamp: {
@@ -353,7 +353,7 @@ You must provide the desired parameters for the LoggerBundleModule, the paramete
   // You can change this
   contextBundle: {
     strategy: {
-      level: NestLoggerLevelStrategy
+      level: LoggerBundleLevelStrategy
     },
   }
 }
@@ -372,7 +372,7 @@ You must provide the desired parameters for the LoggerBundleModule, the paramete
   // You can change this
   contextBundle: {
     strategy: {
-      level: NestLoggerLevelStrategy
+      level: LoggerBundleLevelStrategy
     },
   }
 }
@@ -380,54 +380,61 @@ You must provide the desired parameters for the LoggerBundleModule, the paramete
 
 Below is the description of each parameter
 
-- **NestLoggerParams**<br/>
+- **LoggerBundleParams**<br/>
 
   | Param | Description 
   | :--- | :----:
-  | ***loggers***?: NestLoggerParamsPinoStream \| NestLoggerParamsCustomPino | The NestLoggerBundle uses the `pino-multi-stream ` to transport the logs to several different destinations at the same time, if you want to use the default implementation that makes managing these logs very easy use type `'default'` so some parameters of `NestLoggersParamsStream` will be provided, but if you choose to use a type `'custom'` some parameters of `NestLoggersParamsCustom` will be provided and you can use a `pino` logger configured in your own way.
-  |  ***contextBundle***?: NestLoggerParamsContextBundle | Here you can configure some behaviors related to how the bundle is created, for example, configure what the bundle's marjoritary level will be..
+  | ***loggers***?: NestLoggerParamsPinoStream \| NestLoggerParamsCustomPino | The NestLoggerBundle uses the `pino-multi-stream ` to transport the logs to several different destinations at the same time, if you want to use the default implementation that makes managing these logs very easy use type `'default'` so some parameters of `LoggerBundleParamsStream` will be provided, but if you choose to use a type `'custom'` some parameters of `LoggerBundleParamsCustom` will be provided and you can use a `pino` logger configured in your own way.
+  |  ***contextBundle***?: LoggerBundleParamsContextBundle | Here you can configure some behaviors related to how the bundle is created, for example, configure what the bundle's marjoritary level will be..
   |  ***forRoutes***?: (string \| Type<any> \| RouteInfo)[] | Pattern based routes are supported as well. For instance, the asterisk is used as a wildcard, and will match any combination of characters, for more datails see [NestJS-Middlewares](https://docs.nestjs.com/middleware), the default is `[{ path: '*', method: RequestMethod.ALL }]`
 
-- **NestLoggersParamsStream**<br/>
-  If you choose to use the default configuration in `NestLoggerParams`, using '`{ type: 'default', ... }`' the options for these parameters will be provided
+- **LoggerBundleParamsStream**<br/>
+  If you choose to use the default configuration in `LoggerBundleParams`, using '`{ type: 'default', ... }`' the options for these parameters will be provided
   > It is worth remembering that it is recommended to use this configuration if you do not have the need to create your own configuration.
 
   | Param | Description 
   | :--- | :----:
   | ***type***: `'default'` | For the options to follow this pattern you must set the type to `'default'`
-  | ***prettyPrint***?: NestLoggersParamsPretty | Here you can configure `prettyStream`, choosing to disable it if necessary and also provide your `pin.PrettyOptions`
-  | ***streams***?: NestLoggersParamsStreams | Here you can configure `streams`, choosing to disable it if necessary and also provide your own transporter
-  | ***timestamp***?: NestLoggerParamsPinoTimestamp | You can also configure how the timestamp will be formatted in the logs informing a template and a timezone, the template is created with the help of `dayjs` to assemble the desired string you can use the symbols informed here [Day.js](https://day.js.org/docs/en/display/format)
+  | ***prettyPrint***?: LoggerBundleParamsPretty | Here you can configure `prettyStream`, choosing to disable it if necessary and also provide your `pin.PrettyOptions`
+  | ***streams***?: LoggerBundleParamsStreams | Here you can configure `streams`, choosing to disable it if necessary and also provide your own transporter
+  | ***timestamp***?: LoggerBundleParamsTimestamp | To configure how the timestamp will be formatted or even disable it, use these settings
 
   ###  Related Params
     
-    - **NestLoggersParamsPretty**<br/>
+    - **LoggerBundleParamsPretty**<br/>
 
       | Param | Description 
       | :--- | :----:
-      | ***mode***?: NestLoggerParamsLogggerMode | Here you can choose the mode that `prettyStream` will display the logs, the default value is `NestLoggerParamsLogggerMode.LOG_BUNDLE`, so the bundle will be logged.
+      | ***mode***?: LoggerBundleParamsLogggerMode | Here you can choose the mode that `prettyStream` will display the logs, the default value is `LoggerBundleParamsLogggerMode.LOG_BUNDLE`, so the bundle will be logged.
       | ***disabled***?: boolean | If you want to disable the `prettyStream` you can pass `false` in this option `(remembering that, as it will be disabled the 'options' will not have any effects)`
       | ***options***?: pino.PrettyOptions | Here you can pass some options provided by `pin`, like `{colorize: true}`
 
-    - **NestLoggersParamsStreams**<br/>
+    - **LoggerBundleParamsStreams**<br/>
     
       | Param | Description 
       | :--- | :----:
-      | ***mode***?: NestLoggerParamsLogggerMode | Here you can choose the mode that `streams` will display the logs, the default value is `NestLoggerParamsLogggerMode.LOG_BUNDLE`, so the bundle will be logged.
+      | ***mode***?: LoggerBundleParamsLogggerMode | Here you can choose the mode that `streams` will display the logs, the default value is `LoggerBundleParamsLogggerMode.LOG_BUNDLE`, so the bundle will be logged.
       | ***pinoStreams***?: pinoms.Streams | You can also tell which `streams` you want pinoms handles, you can find implementations of various transporters that can be used here https://github.com/pinojs/pino/blob/master/docs/transports.md#legacy
 
-    - **NestLoggerParamsLogggerMode**<br/>
+    - **LoggerBundleParamsLogggerMode**<br/>
 
       There are two types of modes used in the `prettyPrint` and `streams` settings, they are:
 
       | Enum | Description 
       | :--- | :----:
-      | ***NestLoggerParamsLogggerMode.LOG_BUNDLE*** | Indicates that the log will be sent to the destination as a bundle `(this is the default behavior of all destinations)`
-      | ***NestLoggerParamsLogggerMode.LOG_LINE*** | Indicates that the log will be sent to the destination as log lines
+      | ***LoggerBundleParamsLogggerMode.LOG_BUNDLE*** | Indicates that the log will be sent to the destination as a bundle `(this is the default behavior of all destinations)`
+      | ***LoggerBundleParamsLogggerMode.LOG_LINE*** | Indicates that the log will be sent to the destination as log lines
 
     - **pinoms.Streams**<br/>
 
       Here you can set some streams to transport your logs, check these examples of how to use [Streams](#streams)
+
+    - **LoggerBundleParamsTimestamp**<br/>
+
+      | Param | Description 
+      | :--- | :----:
+      | ***disabled***: boolean | If necessary, you can also disable the timestamp.
+      | ***format***: LoggerBundleParamsPinoTimestampFormat | You can also configure how the timestamp will be formatted in the logs informing a template and a timezone, the template is created with the help of `dayjs` to assemble the desired string you can use the symbols informed here [Day.js](https://day.js.org/docs/en/display/format)
 
     - **NestLoggerParamsPinoTimestamp**<br/>
 
@@ -438,7 +445,7 @@ Below is the description of each parameter
 
 
 
-- **NestLoggersParamsCustom**<br/>
+- **LoggerBundleParamsCustom**<br/>
   But if you choose to use the default configuration in `NestLoggerParamsCustomPino`, using '`{ type: 'custom', ... }`' the options for these parameters will be provided
 
   | Param | Description 
@@ -447,21 +454,21 @@ Below is the description of each parameter
   | ***bundleLogger***: pino.Logger | This logger will be used to log bundles only
   | ***lineLogger***?: pino.Logger | This logger will be used to log only line logs (which are common logs)
 
-- **NestLoggerParamsContextBundle**<br/>
+- **LoggerBundleParamsContextBundle**<br/>
   Here you can configure bundle-related behaviors, such as the `strategy` used to dispatch the bundle to the loggers
 
   | Param | Description 
   | :--- | :----:
-  | ***strategy***?: NestLoggerParamsContextBundleStrategy | Strategy used to dispatch the bundle to the loggers
+  | ***strategy***?: LoggerBundleParamsContextBundleStrategy | Strategy used to dispatch the bundle to the loggers
 
   ###  Related Params
 
-  - **NestLoggerParamsContextBundleStrategy**<br/>
+  - **LoggerBundleParamsContextBundleStrategy**<br/>
   Below are the settings available for these strategies
 
     | Param | Description 
     | :--- | :----:
-    | ***level***?: NestLoggerLevelStrategy | This strategy defines what will be the main level of the bundle, as the bundle will contain a tree of logs, it can contain several logs with several levels, so to define the main level, the configuration provided here is used to decide the best level, the default strategy is `NestLoggerLevelStrategy.MAJOR_LEVEL`
+    | ***level***?: LoggerBundleLevelStrategy | This strategy defines what will be the main level of the bundle, as the bundle will contain a tree of logs, it can contain several logs with several levels, so to define the main level, the configuration provided here is used to decide the best level, the default strategy is `LoggerBundleLevelStrategy.MAJOR_LEVEL`
 
 ### Streams
 
@@ -473,8 +480,8 @@ observability service in the cloud, here is an example of how to configure this 
   import datadog from 'pino-datadog';
 
   // ... 
-  NestLoggerModule.forRootAsync({
-    useFactory: async (config: ConfigService): Promise<NestLoggerParams> => {
+  LoggerBundleModule.forRootAsync({
+    useFactory: async (config: ConfigService): Promise<LoggerBundleParams> => {
       const datadogStream = await datadog.createWriteStream({
         apiKey: config.get('datadog.apiKey'),
         service: config.get('datadog.serviceName'),
@@ -565,13 +572,13 @@ import { GlobalInterceptor } from './example-http-interceptor.ts'
 In case you need to call some asynchronous function and not block the execution with `await` this can create a point of failure for the `LoggerBundle`, this failure is not serious but it can create confusion when interpreting the logs, this happens because a request that originated this call can end before the async function finishes, so when the request is finished the `LoggerBundle` assembles a bundle and transports it, so the async call that can still be loose and calling logging in will not be packaged in the same bundle, these logs they would be lost. For this there is a function that creates an asynchronous `LoggerBundle` and transfers you the responsibility of transporting the log at the end of the asynchronous flow. An example of usage is shown below
 
 ```ts
-import { AsyncLoggerService, NestLoggerService } from 'nest-logger-bundle';
+import { AsyncLoggerService, LoggerBundleService } from 'nest-logger-bundle';
 
 @Injectable()
 export class SampleUserService {
 
   constructor(
-    private logService: NestLoggerService
+    private logService: LoggerBundleService
   ) {
     this.logService.setContextToken(SampleService.name)
   }

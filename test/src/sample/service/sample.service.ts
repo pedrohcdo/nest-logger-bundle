@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common'
-import { NestLoggerService } from 'nest-logger-bundle';
+import { LoggerBundleService } from 'nest-logger-bundle';
+
 @Injectable()
 export class SampleService {
 
 	constructor(
-	  private logService: NestLoggerService
+	  private logService: LoggerBundleService
 	) {
 	  this.logService.setContextToken(SampleService.name)
 	}

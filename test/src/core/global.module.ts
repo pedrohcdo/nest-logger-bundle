@@ -7,10 +7,10 @@ import { GlobalExceptionFilter } from './global-exception.filter';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { environmentSchema } from '../config/environment.schema';
 import {
-	NestLoggerLevelStrategy,
-	NestLoggerModule,
-	NestLoggerParams,
-	NestLoggerParamsLogggerMode,
+	LoggerBundleLevelStrategy,
+	LoggerBundleModule,
+	LoggerBundleParams,
+	LoggerBundleParamsLogggerMode,
 } from 'nest-logger-bundle';
 
 import datadog from 'pino-datadog';
@@ -30,9 +30,9 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 		}),
 
 		//
-		NestLoggerModule.forRootAsync({
+		LoggerBundleModule.forRootAsync({
 			isGlobal: false,
-			useFactory: async (config: ConfigService): Promise<NestLoggerParams> => {
+			useFactory: async (config: ConfigService): Promise<LoggerBundleParams> => {
 				const datadogStream = await datadog.createWriteStream({
 					apiKey: config.get('datadog.apiKey'),
 					service: config.get('datadog.serviceName'),
@@ -42,7 +42,7 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 					loggers: {
 						type: 'default',
 						prettyPrint: {
-							mode: NestLoggerParamsLogggerMode.LOG_BUNDLE,
+							mode: LoggerBundleParamsLogggerMode.LOG_BUNDLE,
 							disabled: false,
 							options: {
 								colorize: true,
@@ -50,7 +50,7 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 							},
 						},
 						streams: {
-							mode: NestLoggerParamsLogggerMode.LOG_BUNDLE,
+							mode: LoggerBundleParamsLogggerMode.LOG_BUNDLE,
 							disabled: true,
 							pinoStreams: [
 								{
@@ -69,7 +69,7 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 
 					contextBundle: {
 						strategy: {
-							level: NestLoggerLevelStrategy.MAJOR_LEVEL,
+							level: LoggerBundleLevelStrategy.MAJOR_LEVEL,
 						},
 					},
 				};
@@ -89,6 +89,6 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 		},
 	],
 
-	exports: [ConfigModule, NestLoggerModule],
+	exports: [ConfigModule, LoggerBundleModule],
 })
 export class GlobalModule {}

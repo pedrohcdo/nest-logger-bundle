@@ -2,19 +2,19 @@ import { Inject, Injectable, Scope, LoggerService } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { LINE_LOGGER_PROVIDER_TOKEN } from 'nest-logger-bundle/nest-logger.params';
 import pino from 'pino';
-import { NestAsyncLoggerContext } from '../bundle/context/async-logger-context.service';
+import { BundleAsyncLoggerContext } from '../bundle/context/async-logger-context.service';
 import { LoggerFunction, PinoMethods } from '../bundle/context/logger.definitions';
 import { NestLoggerBundle } from '../bundle/logger-bundle.service';
 
 @Injectable({
 	scope: Scope.TRANSIENT,
 })
-export class NestLoggerService implements PinoMethods, LoggerService {
+export class LoggerBundleService implements PinoMethods, LoggerService {
 	private contextToken: string;
 	private dettachedFromBundle: boolean = false;
 
 	constructor(
-		protected loggerContext: NestAsyncLoggerContext,
+		protected loggerContext: BundleAsyncLoggerContext,
 		private moduleRef: ModuleRef,
 		@Inject(LINE_LOGGER_PROVIDER_TOKEN) private lineLogger: pino.Logger
 	) {
@@ -125,7 +125,7 @@ export class NestLoggerService implements PinoMethods, LoggerService {
 @Injectable({
 	scope: Scope.TRANSIENT,
 })
-export class AsyncLoggerService extends NestLoggerService {
+export class AsyncLoggerService extends LoggerBundleService {
 	dispatch(message: string) {
 		this.loggerContext.dispatchCurrentLoggerBundle(message);
 	}

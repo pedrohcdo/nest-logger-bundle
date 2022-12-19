@@ -6,14 +6,14 @@ import {
 } from '@nestjs/common'
 import { BaseExceptionFilter } from '@nestjs/core'
 import { MESSAGES } from '@nestjs/core/constants'
-import { NestAsyncLoggerContext } from '../../bundle/context/async-logger-context.service'
-import { NestLoggerService } from '../../logger/logger.service'
+import { BundleAsyncLoggerContext } from '../../bundle/context/async-logger-context.service'
+import { LoggerBundleService } from '../../logger/logger.service'
 
 @Catch()
 export class LoggerExceptionFilter extends BaseExceptionFilter {
 
 	// httpAdapterHost is automatic injected
-	constructor(private loggerService: NestLoggerService, private loggerContext: NestAsyncLoggerContext) {
+	constructor(private loggerService: LoggerBundleService, private loggerContext: BundleAsyncLoggerContext) {
 		super()
 		this.loggerService.setContextToken(LoggerExceptionFilter.name);
 	}

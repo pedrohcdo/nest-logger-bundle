@@ -8,5 +8,4 @@ export * from './logger-branch/logger-leaf';
 export * from './logger-branch/logger-node';
 
 export * from './dummy-logger';
-export * from './logger-bundle.module';
 export * from './logger-bundle.service';
