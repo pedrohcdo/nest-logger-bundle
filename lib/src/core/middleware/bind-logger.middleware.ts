@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { BundleLoggerStorage, BundleLoggerStore } from '../../bundle/context/async-logger.hook';
-import { NestLoggerBundle } from '../../bundle/logger-bundle.service';
+import { LoggerBundle } from '../../bundle/logger-bundle.service';
 import { NextFunction, Request, Response } from 'express';
 
 const NEST_LOGGER_REQ_ID_PREFIX = "NEST_LOGGER_REQ_";
@@ -8,7 +8,7 @@ const NEST_LOGGER_REQ_ID_PREFIX = "NEST_LOGGER_REQ_";
 @Injectable()
 export class LoggerBundleHookMiddleware implements NestMiddleware {
 
-    constructor(private loggerContext: NestLoggerBundle) {}
+    constructor(private loggerContext: LoggerBundle) {}
 
     //
     use(request: Request, _: Response, next: NextFunction) {
