@@ -352,9 +352,7 @@ You must provide the desired parameters for the LoggerBundleModule, the paramete
   // You can change this
   contextBundle: {
     strategy: {
-      onDispatch: NestLoggerDispatchStrategy,
-      level: NestLoggerLevelStrategy,
-      onError: NestLoggerOnErrorStrategy,
+      level: NestLoggerLevelStrategy
     },
   }
 }
@@ -373,9 +371,7 @@ You must provide the desired parameters for the LoggerBundleModule, the paramete
   // You can change this
   contextBundle: {
     strategy: {
-      onDispatch: NestLoggerDispatchStrategy,
-      level: NestLoggerLevelStrategy,
-      onError: NestLoggerOnErrorStrategy,
+      level: NestLoggerLevelStrategy
     },
   }
 }
@@ -463,8 +459,6 @@ Below is the description of each parameter
     | Param | Description 
     | :--- | :----:
     | ***level***: NestLoggerLevelStrategy | This strategy defines what will be the main level of the bundle, as the bundle will contain a tree of logs, it can contain several logs with several levels, so to define the main level, the configuration provided here is used to decide the best level, the default strategy is `NestLoggerLevelStrategy.MAJOR_LEVEL`
-    | ***onDispatch***: NestLoggerDispatchStrategy | At the end of a flow, such as a request, depending on the rule provided here the generated bundle will be dispatched or not to the loggers, the main rule is `NestLoggerDispatchStrategy.DISPATCH`
-    | ***onError***: NestLoggerOnErrorStrategy | When an error occurs in the application, the bundle generated until that moment will be dispatched or not depending on the rule provided here, the main rule is `NestLoggerOnErrorStrategy.DISPATCH`
 
 ### Streams
 

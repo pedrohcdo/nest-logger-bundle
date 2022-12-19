@@ -7,10 +7,8 @@ import { GlobalExceptionFilter } from './global-exception.filter';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { environmentSchema } from '../config/environment.schema';
 import {
-	NestLoggerDispatchStrategy,
 	NestLoggerLevelStrategy,
 	NestLoggerModule,
-	NestLoggerOnErrorStrategy,
 	NestLoggerParams,
 	NestLoggerParamsLogggerMode,
 } from 'nest-logger-bundle';
@@ -33,7 +31,50 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 		}),
 
 		//
-		NestLoggerModule.forRoot({}),
+		NestLoggerModule.forRootAsync({
+			isGlobal: false,
+			useFactory: async (config: ConfigService): Promise<NestLoggerParams> => {
+				const datadogStream = await datadog.createWriteStream({
+					apiKey: config.get('datadog.apiKey'),
+					service: config.get('datadog.serviceName'),
+				});
+
+				return {
+					loggers: {
+						type: 'default',
+						prettyPrint: {
+							mode: NestLoggerParamsLogggerMode.LOG_LINE,
+							disabled: false,
+							options: {
+								colorize: true,
+							},
+						},
+						streams: {
+							mode: NestLoggerParamsLogggerMode.LOG_BUNDLE,
+							disabled: false,
+							pinoStreams: [
+								{
+									stream: datadogStream,
+								},
+							],
+						},
+						timestamp: {
+							format: {
+								template: 'DD/MM/YYYY - HH:mm:ss.SSS',
+								timezone: 'America/Sao_Paulo',
+							},
+						},
+					},
+
+					contextBundle: {
+						strategy: {
+							level: NestLoggerLevelStrategy.MAJOR_LEVEL
+						},
+					},
+				};
+			},
+			inject: [ConfigService],
+		}),
 	],
 
 	providers: [

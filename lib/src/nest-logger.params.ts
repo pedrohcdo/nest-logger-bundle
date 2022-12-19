@@ -5,20 +5,10 @@ import { PinoLevels } from './bundle/context/logger.definitions'
 export const BUNDLE_LOGGER_PROVIDER_TOKEN = 'BUNDLE_LOGGER_PROVIDER_TOKEN'
 export const LINE_LOGGER_PROVIDER_TOKEN = 'LINE_LOGGER_PROVIDER_TOKEN'
 
-export enum NestLoggerDispatchStrategy {
-	DISPATCH = 0,
-	DISCARD = 1
-}
-
 export enum NestLoggerLevelStrategy {
 	MINOR_LEVEL = 0,
 	MAJOR_LEVEL = 1,
 	LAST_LEVEL = 2,
-}
-
-export enum NestLoggerOnErrorStrategy {
-	DISPATCH = 0,
-	DISCARD = 1
 }
 
 export interface LoggerModuleAsyncParams {
@@ -29,9 +19,6 @@ export interface LoggerModuleAsyncParams {
 
 export interface NestLoggerParamsContextBundleStrategy {
 	level?: NestLoggerLevelStrategy
-	onDispatch?: NestLoggerDispatchStrategy
-	onError?: NestLoggerOnErrorStrategy
-
 }
 
 export enum NestLoggerParamsLogggerMode {
@@ -63,6 +50,7 @@ export interface NestLoggersParamsTimestamp {
 
 export interface NestLoggersParamsStreams {
 
+	disabled?: boolean
 	pinoStreams?: pinoms.Streams
 	mode?: NestLoggerParamsLogggerMode
 }
