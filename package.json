@@ -27,7 +27,7 @@
     "pino-multi-stream": "^6.0.0",
     "quick-format-unescaped": "^4.0.4",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.5.5"
+    "rxjs": "^7.5.7"
   },
   "devDependencies": {
     "@nestjs/swagger": "^6.0.5",
