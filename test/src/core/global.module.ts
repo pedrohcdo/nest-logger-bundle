@@ -46,7 +46,7 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 							disabled: false,
 							options: {
 								colorize: true,
-								minimumLevel: "trace" // optional
+								minimumLevel: 'trace', // optional
 							},
 						},
 						streams: {
@@ -55,8 +55,8 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 							pinoStreams: [
 								{
 									stream: datadogStream,
-									level: "trace"
-								}
+									level: 'trace',
+								},
 							],
 						},
 						timestamp: {
