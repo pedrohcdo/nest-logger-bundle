@@ -1,4 +1,3 @@
-import { ContextId } from '@nestjs/core';
 import { AsyncLocalStorage } from 'async_hooks';
 import { Logger } from 'pino';
 

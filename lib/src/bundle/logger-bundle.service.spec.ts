@@ -1,19 +1,19 @@
 import { REQUEST } from '@nestjs/core';
-import { Test, TestingModule } from '@nestjs/testing';
+import { TestingModule } from '@nestjs/testing';
 import pino from 'pino';
 import { TestUtils } from 'test-utils';
 import { MODULE_OPTIONS_TOKEN } from '../nest-logger.module-definition';
 import {
 	BUNDLE_LOGGER_PROVIDER_TOKEN,
 	LINE_LOGGER_PROVIDER_TOKEN,
-	NestLoggerLevelStrategy,
+	LoggerBundleLevelStrategy,
 } from '../nest-logger.params';
 import { NestLoggerBundleModule } from './logger-bundle.module';
-import { NestLoggerBundle } from './logger-bundle.service';
+import { LoggerBundle } from './logger-bundle.service';
 
 describe('NestLoggerBundle', () => {
 	let module: TestingModule;
-	let loggerBundle: NestLoggerBundle;
+	let loggerBundle: LoggerBundle;
 
 	beforeAll(async () => {
 		//
@@ -28,7 +28,7 @@ describe('NestLoggerBundle', () => {
 						contextBundle: {
 							defaultLevel: 'debug',
 							strategy: {
-								level: NestLoggerLevelStrategy.MAJOR_LEVEL,
+								level: LoggerBundleLevelStrategy.MAJOR_LEVEL,
 							},
 						},
 					},
@@ -40,7 +40,7 @@ describe('NestLoggerBundle', () => {
 	});
 
 	beforeEach(async () => {
-		loggerBundle = await module.resolve<NestLoggerBundle>(NestLoggerBundle);
+		loggerBundle = await module.resolve<LoggerBundle>(LoggerBundle);
 	});
 
 	describe('creating NestLoggerBundle', () => {

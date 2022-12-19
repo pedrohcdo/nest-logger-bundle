@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common'
 import pino from 'pino'
 import pinoHttp from 'pino-http'
-import { BundleAsyncLoggerContext, NestLoggerBundle } from './bundle'
+import { BundleAsyncLoggerContext, LoggerBundle } from './bundle'
 import { LoggerBundleHookMiddleware } from './core'
 import { BundleLoggerProvider } from './core/providers/bundle-logger.provider'
 import { LineLoggerProvider } from './core/providers/pretty-logger.provider'
@@ -17,7 +17,7 @@ import { BUNDLE_LOGGER_PROVIDER_TOKEN, LoggerBundleParams } from './nest-logger.
 
 @Module({
 	providers: [
-		NestLoggerBundle,
+		LoggerBundle,
 		LoggerBundleService,
 		BundleAsyncLoggerContext,
 		InternalLoggerService,
@@ -25,7 +25,7 @@ import { BUNDLE_LOGGER_PROVIDER_TOKEN, LoggerBundleParams } from './nest-logger.
 		LineLoggerProvider
 	],
 	exports: [
-		NestLoggerBundle,
+		LoggerBundle,
 		LoggerBundleService,
 		BundleAsyncLoggerContext,
 		InternalLoggerService,

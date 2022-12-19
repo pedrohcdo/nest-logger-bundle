@@ -1,4 +1,4 @@
-import { NestLoggerLevelStrategy } from "../../nest-logger.params";
+import { LoggerBundleLevelStrategy } from "../../nest-logger.params";
 import { LoggerLeaf } from "./logger-leaf";
 
 describe('LoggerLeaf', () => {
@@ -12,9 +12,9 @@ describe('LoggerLeaf', () => {
     describe('introspecting leaf', () => {
 
         it('should be info', async () => {
-            expect(loggerLeaf.introspectLevel(NestLoggerLevelStrategy.MINOR_LEVEL)).toEqual('info')
-            expect(loggerLeaf.introspectLevel(NestLoggerLevelStrategy.MAJOR_LEVEL)).toEqual('info')
-            expect(loggerLeaf.introspectLevel(NestLoggerLevelStrategy.LAST_LEVEL)).toEqual('info')
+            expect(loggerLeaf.introspectLevel(LoggerBundleLevelStrategy.MINOR_LEVEL)).toEqual('info')
+            expect(loggerLeaf.introspectLevel(LoggerBundleLevelStrategy.MAJOR_LEVEL)).toEqual('info')
+            expect(loggerLeaf.introspectLevel(LoggerBundleLevelStrategy.LAST_LEVEL)).toEqual('info')
 		});
     })
 

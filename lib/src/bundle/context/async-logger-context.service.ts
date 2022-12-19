@@ -6,7 +6,7 @@ import {
 	BUNDLE_LOGGER_PROVIDER_TOKEN,
 	LoggerBundleParams
 } from '../../nest-logger.params';
-import { NestLoggerBundle } from '../logger-bundle.service';
+import { LoggerBundle } from '../logger-bundle.service';
 import { BundleLoggerStorage } from './async-logger.hook';
 
 /**
@@ -18,7 +18,7 @@ export class BundleAsyncLoggerContext {
 	private detachedContext: {
 		logger: pino.Logger;
 		reqId: string;
-		loggerBundle: NestLoggerBundle;
+		loggerBundle: LoggerBundle;
 	};
 
 	constructor(
@@ -76,12 +76,12 @@ export class BundleAsyncLoggerContext {
 	 */
 	async createDetachedContext(): Promise<BundleAsyncLoggerContext> {
 		const context = await this.moduleRef.create(BundleAsyncLoggerContext);
-		const detachedLoggerBundle = await this.moduleRef.create(NestLoggerBundle);
+		const detachedLoggerBundle = await this.moduleRef.create(LoggerBundle);
 
 		let getFrom: {
 			logger: pino.Logger;
 			reqId: string;
-			loggerBundle: NestLoggerBundle;
+			loggerBundle: LoggerBundle;
 		};
 
 		if (this.detachedContext) {

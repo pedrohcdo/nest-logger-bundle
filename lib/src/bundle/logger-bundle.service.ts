@@ -36,7 +36,7 @@ export class LoggableBundleObject {
 @Injectable({
 	scope: Scope.REQUEST,
 })
-export class NestLoggerBundle {
+export class LoggerBundle {
 	private expired: boolean = false;
 	private currentBranch: LoggerBranch;
 	private bindings: LoggerBindings;
@@ -57,7 +57,7 @@ export class NestLoggerBundle {
 		this.bindings.tags[tag] = value;
 	}
 
-	copyFrom(otherBundle: NestLoggerBundle) {
+	copyFrom(otherBundle: LoggerBundle) {
 		this.currentBranch = otherBundle.getRootBranch().clone() as LoggerBranch;
 		this.bindings = {
 			context: Object.assign({}, otherBundle.bindings.context),

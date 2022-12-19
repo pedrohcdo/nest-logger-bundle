@@ -2,7 +2,6 @@ import { LoggerBundleLevelStrategy } from "../../nest-logger.params";
 import pino from "pino";
 import { LoggerFunction, PinoLevels } from "../context/logger.definitions";
 import { LoggerBranchUtils } from "./branch.utils";
-import { LoggerBranch } from "./logger-branch";
 import { LoggerNode } from "./logger-node";
 
 export class LoggerLeaf implements LoggerNode {

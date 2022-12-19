@@ -1,4 +1,4 @@
-import { NestLoggerLevelStrategy } from "../../nest-logger.params";
+import { LoggerBundleLevelStrategy } from "../../nest-logger.params";
 import { LoggerBranch } from "./logger-branch";
 
 describe('LoggerBranch', () => {
@@ -159,9 +159,9 @@ describe('LoggerBranch', () => {
             loggerBranch.log('warn', 'f');
 
             //
-            expect(loggerBranch.introspectLevel(NestLoggerLevelStrategy.MINOR_LEVEL)).toEqual('trace')
-            expect(loggerBranch.introspectLevel(NestLoggerLevelStrategy.MAJOR_LEVEL)).toEqual('fatal')
-            expect(loggerBranch.introspectLevel(NestLoggerLevelStrategy.LAST_LEVEL)).toEqual('warn')
+            expect(loggerBranch.introspectLevel(LoggerBundleLevelStrategy.MINOR_LEVEL)).toEqual('trace')
+            expect(loggerBranch.introspectLevel(LoggerBundleLevelStrategy.MAJOR_LEVEL)).toEqual('fatal')
+            expect(loggerBranch.introspectLevel(LoggerBundleLevelStrategy.LAST_LEVEL)).toEqual('warn')
 		});
     })
 

@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing'
+import { TestingModule } from '@nestjs/testing'
 import { TestUtils } from 'test-utils';
 import { LoggerBundleModule } from './nest-logger.module'
 
