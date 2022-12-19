@@ -6,4 +6,4 @@ import { LoggerBundle } from './logger-bundle.service';
 	providers: [BundleAsyncLoggerContext, LoggerBundle],
 	exports: [BundleAsyncLoggerContext, LoggerBundle],
 })
-export class NestLoggerBundleModule {}
+export class LoggerBundleModule {}

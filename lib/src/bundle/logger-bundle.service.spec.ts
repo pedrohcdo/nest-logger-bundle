@@ -8,7 +8,7 @@ import {
 	LINE_LOGGER_PROVIDER_TOKEN,
 	LoggerBundleLevelStrategy,
 } from '../nest-logger.params';
-import { NestLoggerBundleModule } from './logger-bundle.module';
+import { LoggerBundleModule } from './logger-bundle.module';
 import { LoggerBundle } from './logger-bundle.service';
 
 describe('NestLoggerBundle', () => {
@@ -18,7 +18,7 @@ describe('NestLoggerBundle', () => {
 	beforeAll(async () => {
 		//
 		module = await TestUtils.createTestingModule(
-			[NestLoggerBundleModule],
+			[LoggerBundleModule],
 			[],
 			[
 				[REQUEST, { data: {} }],
