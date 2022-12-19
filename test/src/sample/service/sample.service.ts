@@ -30,7 +30,7 @@ export class SampleService {
 	  } else {
 		this.logService.log('A user with that email already exists')
 	  }
-  
+
 	  // ...
 	  this.logService.exit()
   

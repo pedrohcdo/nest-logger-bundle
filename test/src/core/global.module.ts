@@ -33,51 +33,7 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 		}),
 
 		//
-		NestLoggerModule.forRootAsync({
-			isGlobal: false,
-			useFactory: async (config: ConfigService): Promise<NestLoggerParams> => {
-				const datadogStream = await datadog.createWriteStream({
-					apiKey: config.get('datadog.apiKey'),
-					service: config.get('datadog.serviceName'),
-				});
-
-				return {
-					loggers: {
-						type: 'default',
-						prettyPrint: {
-							mode: NestLoggerParamsLogggerMode.LOG_LINE,
-							disabled: false,
-							options: {
-								colorize: true,
-							},
-						},
-						streams: {
-							mode: NestLoggerParamsLogggerMode.LOG_BUNDLE,
-							pinoStreams: [
-								{
-									stream: datadogStream,
-								},
-							],
-						},
-						timestamp: {
-							format: {
-								template: 'DD/MM/YYYY - HH:mm:ss.SSS',
-								timezone: 'America/Sao_Paulo',
-							},
-						},
-					},
-
-					contextBundle: {
-						strategy: {
-							onDispatch: NestLoggerDispatchStrategy.DISPATCH,
-							level: NestLoggerLevelStrategy.MAJOR_LEVEL,
-							onError: NestLoggerOnErrorStrategy.DISPATCH,
-						},
-					},
-				};
-			},
-			inject: [ConfigService],
-		}),
+		NestLoggerModule.forRoot({}),
 	],
 
 	providers: [

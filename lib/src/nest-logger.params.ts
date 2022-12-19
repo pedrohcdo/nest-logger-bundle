@@ -6,8 +6,8 @@ export const BUNDLE_LOGGER_PROVIDER_TOKEN = 'BUNDLE_LOGGER_PROVIDER_TOKEN'
 export const LINE_LOGGER_PROVIDER_TOKEN = 'LINE_LOGGER_PROVIDER_TOKEN'
 
 export enum NestLoggerDispatchStrategy {
-	DISCARD = 0,
-	DISPATCH = 1,
+	DISPATCH = 0,
+	DISCARD = 1
 }
 
 export enum NestLoggerLevelStrategy {
@@ -18,6 +18,7 @@ export enum NestLoggerLevelStrategy {
 
 export enum NestLoggerOnErrorStrategy {
 	DISPATCH = 0,
+	DISCARD = 1
 }
 
 export interface LoggerModuleAsyncParams {

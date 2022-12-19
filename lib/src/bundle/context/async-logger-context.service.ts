@@ -6,6 +6,7 @@ import {
 	BUNDLE_LOGGER_PROVIDER_TOKEN,
 	LINE_LOGGER_PROVIDER_TOKEN,
 	NestLoggerDispatchStrategy,
+	NestLoggerOnErrorStrategy,
 	NestLoggerParams
 } from '../../nest-logger.params';
 import { NestLoggerBundle } from '../logger-bundle.service';
@@ -47,22 +48,27 @@ export class NestAsyncLoggerContext {
 
 	// 
 	dispatchCurrentLoggerBundle(message: string): void;
-	dispatchCurrentLoggerBundle(innerObject: unknown, message?: string): void;
-	dispatchCurrentLoggerBundle(innerObject: unknown, message?: string) {
+	dispatchCurrentLoggerBundle(exception: unknown, message?: string): void;
+	dispatchCurrentLoggerBundle(exceptionOrMessage: unknown, message?: string) {
 		if (!this.hasContext()) {
 			return;
 		}
 
 		const { logger, loggerBundle } = this.getCurrent();
 
+
+		let dispatchOnSuccess = (this.params?.contextBundle?.strategy?.onDispatch || NestLoggerDispatchStrategy.DISPATCH) === NestLoggerDispatchStrategy.DISPATCH;
+		let dispatchOnError = (this.params?.contextBundle?.strategy?.onError || NestLoggerOnErrorStrategy.DISPATCH) === NestLoggerOnErrorStrategy.DISPATCH;
+		let dispatch = message ? dispatchOnError : dispatchOnSuccess;
+		
 		//
-		if (this.params?.contextBundle?.strategy?.onDispatch === NestLoggerDispatchStrategy.DISPATCH) {
+		if (dispatch) {
 			const { object, level } = loggerBundle.build();
 
 			//
 			const childLogger = logger.child(object);
-			if (message) childLogger[level](innerObject, message);
-			else childLogger[level](innerObject);
+			if (message) childLogger[level](exceptionOrMessage, message);
+			else childLogger[level](exceptionOrMessage);
 			childLogger.flush(); // force even with sync
 		}
 

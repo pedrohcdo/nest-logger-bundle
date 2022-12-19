@@ -15,17 +15,11 @@
 
 ## Description
 
-This library made to be used with <a href="http://nodejs.org" target="blank">Nest.js</a> it offers more flexibility for controlling logs in the application. The strongest point is that it offers a way to pack all the logs originating from an request or some asynchronous flow into a single bundle, also later it provides ways to transport the bundles to some cloud observability service.
+This library made to be used with <a href="http://nodejs.org" target="blank">Nest.js</a> it offers more flexibility for controlling logs in the application. The strongest point is that it offers a way to pack all the logs originating from an request or some asynchronous flow into a single bundle, you can also decide what to do with this bundle as well as regular logs.
 
-For example, in a request several logs can occur and organizing this later or finding yourself in the middle of so many logs becomes a complicated task, with the LoggerBundle all the logs that occur in that request will be packed in a bundle and this bundle shows exactly the order that these logs were displayed in a tree, you can even create branches of these logs using the `enter()/ exit()` methods as will be explained later. This bundle will include a lot of useful information, such as the request that originated these logs and in the log tree you will be able to see a time profiling telling you how long it took in each branch tree.
+For example, in a request several logs can occur and organizing this later or finding yourself in the middle of so many logs becomes a complicated task, with the `LoggerBundle` all the logs that occur in that request will be packed in a bundle and this bundle shows exactly the order that these logs were occurred using a tree, you can even create branches of these logs using the `enter()/ exit()` methods as will be explained later. This bundle will include a lot of useful information, such as the request that originated these logs and in the log tree you will be able to see a time profiling telling you how long it took in each branch tree.
 
-Don't worry if some function of a service calls other functions of other services that contain another injected LoggerBundle, because it can find itself within the current context of the request, so no matter how many different services interact, the output will be in the same bundle.
-
-________________
-
-## Internal Dependencies
-
-You don't need to install any extra dependencies. Internally this library is also made using some bases that are made on top of the <a href="https://github.com/pinojs/pino" target="blank">pino</a>, but I have plans to expose this dependencies in the future and leave the user free to choose which one to use.
+Inside it works based on a context, be it a request or an asynchronous flow, so you can inject the `LoggerBundle` into any desired service and all calls between these services work correctly, so all logs occurring in a given request will be packed in the same bundle.
 
 ________________
 
@@ -35,13 +29,20 @@ ________________
 $ npm i --save nest-logger-bundle
 ```
 
-## Samples
 
 ________________
 
+## Internal Dependencies
+
+You don't need to install any extra dependencies. Internally this library is also made using some bases that are made on top of the <a href="https://github.com/pinojs/pino" target="blank">pino</a>. If you need to use some transporter you will need to configure the streams, for that, follow this [section](#streams)
+
+________________
+
+## Samples
+
 If you want to see some usage examples use this repo <a href="https://github.com/pedrohcdo/nest-logger-bundle-samples" target="blank">NestLoggerBundleSamples</a>, In it you will find some projects with some use cases, the codes are commented for a better understanding.
 
-> If you want to see an simple example of how to configure it, see the test project [Example](test).
+> But if you want to see an simple example of how to configure it, see the test project [Example](test).
 
 ________________
 
@@ -468,6 +469,8 @@ Below is the description of each parameter
   | :--- | :----:
   | ***type***: `'custom'` | For the options to follow this pattern you must set the type to `'custom'`
   | ***logger***: pino.Logger | You can pass a logger that was configured your way
+
+### Streams
 
 
 ### Custom Filter and Interceptor
