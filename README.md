@@ -10,6 +10,7 @@
     <img alt="Snyk Vulnerabilities for npm package" src="https://img.shields.io/snyk/vulnerabilities/npm/nest-logger-bundle" />
   </a>
   <img alt="Libraries.io" src="https://img.shields.io/librariesio/release/npm/nest-logger-bundle">
+  <img alt="Supported Language: Typescript" src="https://img.shields.io/npm/types/typescript" />
   <img alt="Supported platforms: Express & Fastify" src="https://img.shields.io/badge/platforms-Express%20%26%20Fastify-green" />
 </p>
 
