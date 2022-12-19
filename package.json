@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "dayjs": "^1.11.7",
-    "pino": "^8.4.0",
+    "pino": "^8.7.0",
     "pino-http": "^8.2.0",
     "pino-multi-stream": "^6.0.0",
     "quick-format-unescaped": "^4.0.4",
