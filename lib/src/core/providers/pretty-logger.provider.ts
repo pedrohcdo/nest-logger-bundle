@@ -1,9 +1,7 @@
 import { Provider } from '@nestjs/common';
 import pino from 'pino';
-import pinoms from 'pino-multi-stream';
 import { MODULE_OPTIONS_TOKEN } from '../../nest-logger.module-definition';
 import { LINE_LOGGER_PROVIDER_TOKEN, NestLoggerParams, NestLoggerParamsLogggerMode } from '../../nest-logger.params';
-import datadog from 'pino-datadog';
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'

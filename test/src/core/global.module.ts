@@ -13,7 +13,6 @@ import {
 	NestLoggerParamsLogggerMode,
 } from 'nest-logger-bundle';
 
-import pinoms from 'pino-multi-stream';
 import datadog from 'pino-datadog';
 
 //
@@ -47,15 +46,17 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 							disabled: false,
 							options: {
 								colorize: true,
+								minimumLevel: "trace" // optional
 							},
 						},
 						streams: {
 							mode: NestLoggerParamsLogggerMode.LOG_BUNDLE,
-							disabled: false,
+							disabled: true,
 							pinoStreams: [
 								{
 									stream: datadogStream,
-								},
+									level: "trace"
+								}
 							],
 						},
 						timestamp: {

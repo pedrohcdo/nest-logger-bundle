@@ -59,7 +59,6 @@ export interface NestLoggersParamsStreams {
 
 export interface NestLoggersParamsCustom {
 	type: "custom"
-	level?: string
 	bundleLogger: pino.Logger
 	lineLogger?: pino.Logger
 }

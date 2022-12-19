@@ -1,5 +1,5 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common'
-import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger'
+import { Controller, Get, Param } from '@nestjs/common'
+import { ApiParam, ApiTags } from '@nestjs/swagger'
 import { SampleService } from '../service/sample.service'
 
 @ApiTags('Sample')

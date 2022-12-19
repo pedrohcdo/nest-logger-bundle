@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { AsyncLoggerService, NestLoggerService } from 'nest-logger-bundle';
+import { NestLoggerService } from 'nest-logger-bundle';
 @Injectable()
 export class SampleService {
 
