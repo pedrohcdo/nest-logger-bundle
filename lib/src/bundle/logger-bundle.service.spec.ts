@@ -6,7 +6,7 @@ import { MODULE_OPTIONS_TOKEN } from '../nest-logger.module-definition';
 import {
 	BUNDLE_LOGGER_PROVIDER_TOKEN,
 	LINE_LOGGER_PROVIDER_TOKEN,
-	NestLoggerLevelStrategy
+	NestLoggerLevelStrategy,
 } from '../nest-logger.params';
 import { NestLoggerBundleModule } from './logger-bundle.module';
 import { NestLoggerBundle } from './logger-bundle.service';
@@ -28,7 +28,7 @@ describe('NestLoggerBundle', () => {
 						contextBundle: {
 							defaultLevel: 'debug',
 							strategy: {
-								level: NestLoggerLevelStrategy.MAJOR_LEVEL
+								level: NestLoggerLevelStrategy.MAJOR_LEVEL,
 							},
 						},
 					},

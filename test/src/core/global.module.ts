@@ -68,7 +68,7 @@ const prod = !NODE_ENV || NODE_ENV === 'production';
 
 					contextBundle: {
 						strategy: {
-							level: NestLoggerLevelStrategy.MAJOR_LEVEL
+							level: NestLoggerLevelStrategy.MAJOR_LEVEL,
 						},
 					},
 				};
