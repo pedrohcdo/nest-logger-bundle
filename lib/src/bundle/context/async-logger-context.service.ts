@@ -1,5 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
+import _ from 'lodash';
+import { LogErrorObjectMessage, LoggerErrorObject } from 'nest-logger-bundle/core/error-utils';
 import pino from 'pino';
 import { MODULE_OPTIONS_TOKEN } from '../../nest-logger.module-definition';
 import {
@@ -65,6 +67,15 @@ export class BundleAsyncLoggerContext {
 		//
 		loggerBundle.expireNow();
 	}
+
+	dispatchInternalError(error: LoggerErrorObject) {
+        let finalError: any = error;
+		let finalMessage = error.getCauseMessage();
+        //
+        this.dispatchCurrentLoggerBundle({
+            error: finalError
+        }, finalMessage);
+    }
 
 	hasContext() {
 		return !!BundleLoggerStorage.getStore();

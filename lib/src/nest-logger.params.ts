@@ -1,7 +1,8 @@
 import { RouteInfo, Type } from '@nestjs/common/interfaces'
 import pino from 'pino'
-import pinoms from 'pino-multi-stream'
+import { PrettyOptions } from 'pino-pretty'
 import { PinoLevels } from './bundle/context/logger.definitions'
+import { PinoStreams } from './core/providers/utils'
 
 export const BUNDLE_LOGGER_PROVIDER_TOKEN = 'BUNDLE_LOGGER_PROVIDER_TOKEN'
 export const LINE_LOGGER_PROVIDER_TOKEN = 'LINE_LOGGER_PROVIDER_TOKEN'
@@ -33,7 +34,7 @@ export enum LoggerBundleParamsLogggerMode {
 export interface LoggerBundleParamsPretty {
 
 	disabled?: boolean
-	options?: pino.PrettyOptions
+	options?: PrettyOptions
 	mode?: LoggerBundleParamsLogggerMode
 }
 
@@ -52,7 +53,7 @@ export interface LoggerBundleParamsTimestamp {
 export interface LoggerBundleParamsStreams {
 
 	disabled?: boolean
-	pinoStreams?: pinoms.Streams
+	pinoStreams?: PinoStreams[]
 	mode?: LoggerBundleParamsLogggerMode
 }
 
