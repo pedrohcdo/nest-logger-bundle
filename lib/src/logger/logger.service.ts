@@ -68,12 +68,7 @@ export class LoggerBundleService implements PinoMethods, LoggerService {
 	}
 
 	internalError(error: any, msg: string, ...args: any[]) {
-		this.call(
-			'error',
-			error,
-			msg,
-			...args
-		)
+		this.call('error', error, msg, ...args);
 	}
 
 	fatal(msg: string, ...args: any[]): void;
