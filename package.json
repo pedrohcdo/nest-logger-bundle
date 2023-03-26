@@ -7,6 +7,10 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pedrohcdo/nest-logger-bundle"
+  },
   "scripts": {
     "test": "jest",
     "prepare": "husky install",
