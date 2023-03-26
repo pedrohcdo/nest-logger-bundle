@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="./logger-bundle.png" width="250" alt="Nest Logo" /></a>
+  <a href="https://github.com/pedrohcdo/nest-logger-bundle" target="blank"><img src="https://github.com/pedrohcdo/nest-logger-bundle/blob/master/logger-bundle.png?raw=true" width="250" alt="Nest Logo" /></a>
 </p>
 
 <p align="center">A flexible Logger created to use with <a href="http://nodejs.org" target="blank">Nest.js</a> framework for wrap all logs with an Request or Async context in a bundle.</p>
