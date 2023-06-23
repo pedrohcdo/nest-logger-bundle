@@ -27,7 +27,7 @@
     "pino-pretty": "^9.1.1"
   },
   "dependencies": {
-    "dayjs": "^1.11.7",
+    "dayjs": "^1.11.8",
     "pino": "8.4.0",
     "pino-http": "^8.2.0",
     "pino-multi-stream": "^6.0.0",
